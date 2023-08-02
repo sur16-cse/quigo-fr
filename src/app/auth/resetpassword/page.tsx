@@ -1,15 +1,13 @@
 "use client"
 import React, { useState } from 'react';
 import FormInput from '@/components/FormInput';
-import { Roles, SignInData } from '@/lib/types';
-import Link from 'next/link';
 
-const defaultFormData: SignInData = {
-  email: '',
+const defaultFormData = {
   password: '',
+  confirmPassword: '',
 };
 
-const LoginForm: React.FC = () => {
+const ResetPassword: React.FC = () => {
   const [formData, setFormData] = useState({ ...defaultFormData });
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -28,16 +26,10 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="flex pt-32 items-center justify-center w-screen flex-col">
+    <div className="flex pt-32 items-center justify-center w-screen flex-col space-y-2">
+        <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-2">{"Choose a new password."}</h1>
+      <div className='text-gray-600 text-lg pb-7'>{"It must have at least 8 characters, 1 letter, 1 number and 1 special character."}</div>
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
-        <FormInput
-          label="Email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
         <FormInput
           label="Password"
           name="password"
@@ -46,33 +38,25 @@ const LoginForm: React.FC = () => {
           onChange={handleChange}
           required
         />
+        <FormInput
+          label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+        />
         <div className="flex items-center justify-center">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Login
+           Save New Password
           </button>
         </div>
       </form>
-      <div className="relative mt-5 text-sm">
-        <div className="inline-flex justify-start items-center max-w-sm">
-          <span className="mr-2">Not have an account yet?</span>
-          <Link href="/auth/signup" className="text-blue-600 focus:text-blue-800">
-            Signup
-          </Link>
-        </div>
-        <span className="mx-2">|</span>
-        <div className="inline-flex justify-center mt-2 max-w-sm">
-          <span className="mr-2">
-            <Link href="/auth/forgotpassword" className="text-blue-600 focus:text-blue-800">
-              Forgot Password
-            </Link>
-          </span>
-        </div>
-      </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default ResetPassword;

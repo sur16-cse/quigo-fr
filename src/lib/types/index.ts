@@ -19,20 +19,19 @@ export interface SignInData {
 }
 
 export interface FormInputProps {
-    label: string;
-    name: string;
-    type: string;
-    value: string | number;
-    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-    required?: boolean;
-  }
+  label: string;
+  name: string;
+  type: string;
+  value: string | number;
+  onChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
+  required?: boolean;
+}
 
 export interface FormSelectProps {
-    label: string;
+  label: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   children: React.ReactNode;
 }
-  
-
-

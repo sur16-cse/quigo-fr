@@ -3,11 +3,13 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
 interface AppStateType {
-  current_role: Roles
+  current_role: Roles,
+  email: string,
 }
 
 const initialState: AppStateType = {
   current_role: Roles.GUEST,
+  email: ''
 };
 
 export const appSlice = createSlice({
@@ -20,6 +22,7 @@ export const appSlice = createSlice({
       } = action;
 
       state[title] = value;
+      console.log(state);
     },
   },
 });

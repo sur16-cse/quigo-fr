@@ -14,7 +14,7 @@ const Navbar = () => {
   return (
     <header>
       <nav>
-        <div className="flex p-3 items-center justify-between bg-primary-color font-serif text-center flex-row text-secondary-color font-normal text-xl">
+        <div className="flex p-3 items-center justify-between bg-primary-color  text-center flex-row shadow-md text-secondary-color font-normal text-base">
           <div className="flex justify-start items-center  space-x-6 ml-8">
             <Link href="/">
               <Image
@@ -46,7 +46,7 @@ const Navbar = () => {
               {isMenuOpen ? (
                 <>
                   <MdOutlineKeyboardArrowUp />
-                  <div className="absolute right-10 top-16 w-60 bg-white rounded-sm shadow-gray-300 z-20">
+                  <div className="absolute right-10 top-16 w-60 mt-1 rounded-md border-0 drop-shadow-xl z-20 p-1">
                     <Link className="px-4 py-2 flex space-x-9 items-center justify-between" href="/auth/login">
                       Log In
                       <MdOutlineKeyboardArrowRight />

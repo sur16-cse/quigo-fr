@@ -4,12 +4,11 @@ import FormInput from '@/components/FormInput';
 import { Roles, SignInData } from '@/lib/types';
 import Link from 'next/link';
 
-const defaultFormData: SignInData = {
+const defaultFormData = {
   email: '',
-  password: '',
 };
 
-const LoginForm: React.FC = () => {
+const ForgotPassword: React.FC = () => {
   const [formData, setFormData] = useState({ ...defaultFormData });
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -28,7 +27,8 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="flex pt-32 items-center justify-center w-screen flex-col">
+    <div className="flex pt-32 items-center justify-center w-screen flex-col space-x-10">
+        <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-24">{"What's your email? Check your inbox for a link to create a new password."}</h1>
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
         <FormInput
           label="Email"
@@ -38,41 +38,17 @@ const LoginForm: React.FC = () => {
           onChange={handleChange}
           required
         />
-        <FormInput
-          label="Password"
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
         <div className="flex items-center justify-center">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Login
+           Submit Email
           </button>
         </div>
       </form>
-      <div className="relative mt-5 text-sm">
-        <div className="inline-flex justify-start items-center max-w-sm">
-          <span className="mr-2">Not have an account yet?</span>
-          <Link href="/auth/signup" className="text-blue-600 focus:text-blue-800">
-            Signup
-          </Link>
-        </div>
-        <span className="mx-2">|</span>
-        <div className="inline-flex justify-center mt-2 max-w-sm">
-          <span className="mr-2">
-            <Link href="/auth/forgotpassword" className="text-blue-600 focus:text-blue-800">
-              Forgot Password
-            </Link>
-          </span>
-        </div>
-      </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default ForgotPassword;
