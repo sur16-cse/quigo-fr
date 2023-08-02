@@ -7,12 +7,13 @@ const Select: React.FC<FormSelectProps> = ({
   label,
   value,
   onChange,
-  children,
+  interfaceType,
+  error
 }) => {
   return (
       <div className="relative mb-10">
         <label
-          className={`peer-focus:font-semibold text-sm text-gray-500 dark:text-gray-400 absolute pointer-events-none  ${
+          className={`peer-focus:font-semibold text-sm text-gray-500 dark:text-gray-400 absolute pointer-events-none  peer-focus:text-blue-600 peer-focus:dark:text-blue-500 ${
             value !== ""
               ? "dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 -top-1 z-10 origin-[0]  dark:bg-gray-900"
               : "top-1"
@@ -27,8 +28,16 @@ const Select: React.FC<FormSelectProps> = ({
           onChange={onChange}
           required
         >
-          {children}
+         <option value="" disabled hidden></option>
+        {Object.values(interfaceType).map((role) =>
+          role !== "" ? (
+            <option key={role} value={role}>
+              {role}
+            </option>
+          ) : null
+        )}
         </select>
+        {error && <div className="text-red-500 text-xs mt-1">{error}</div>}
       </div>
   );
 };

@@ -1,3 +1,5 @@
+import { Interface } from "readline";
+
 export enum Roles {
   RIDER = "rider",
   DRIVER = "driver",
@@ -27,11 +29,13 @@ export interface FormInputProps {
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
   required?: boolean;
+  error: string;
 }
 
 export interface FormSelectProps {
   label: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  children: React.ReactNode;
+  interfaceType: Object
+  error: string;
 }

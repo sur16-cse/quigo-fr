@@ -9,8 +9,10 @@ const FormInput: React.FC<FormInputProps> = ({
   value,
   onChange,
   required,
+  error,
 }) => {
-  const hasValue = value && value.toString.length > 0;
+  const hasValue = value && value.toString().length > 0;
+  console.log(error);
 
   return (
     <div className="relative z-0 w-full mb-6 group">
@@ -32,6 +34,7 @@ const FormInput: React.FC<FormInputProps> = ({
       >
         {label}
       </label>
+      {error && <div className="text-red-500 text-xs mt-1">{error}</div>} 
     </div>
   );
 };
