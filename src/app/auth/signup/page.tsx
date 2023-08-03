@@ -7,6 +7,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setAppState } from "@/redux/slices/appStateReducer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { validateForm } from "@/utils/validateForm";
 
 const defaultFormData: SignUpData = {
   name: "",
@@ -20,24 +21,31 @@ const defaultFormData: SignUpData = {
 const SignUpForm: React.FC = () => {
   const [formData, setFormData] = useState({ ...defaultFormData });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-  const [isValid, setIsValid] = useState(false);
   const router = useRouter();
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordPattern =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-  const phonePattern = /^[0-9]{10}$/;
+  const dispatch = useAppDispatch();
+
+  const fieldsToValidate = [
+    "name",
+    "email",
+    "role",
+    "password",
+    "confirm_password",
+    "phone_number",
+  ];
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (isValid) {
+
+    if (Object.keys(formErrors).length === 0) {
       // Handle form submission here
       dispatch(setAppState({ title: "email", value: formData.email }));
       console.log(formData);
       // Submit the form or navigate to the next page
       router.push("/auth/verifyemail");
+    } else {
+      setFormErrors((prevErrors) => ({ ...prevErrors, form: "Invalid form" }));
     }
   };
-  const dispatch = useAppDispatch();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -49,60 +57,6 @@ const SignUpForm: React.FC = () => {
       [name]: value,
     }));
     setFormErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-  };
-
-  const validateForm = () => {
-    const errors: { [key: string]: string } = {};
-
-    // Check required field
-    if (!formData.name.trim()) {
-      errors.name = "Name is required";
-      setIsValid(false);
-    }
-
-    // Validate email
-    if (!formData.email.trim()) {
-      errors.email = "Email is required";
-      setIsValid(false);
-    } else if (!emailPattern.test(formData.email)) {
-      errors.email = "Invalid email format";
-      setIsValid(false);
-    }
-
-    //validate role
-    if (!formData.role.trim()) {
-      errors.role = "Role is required";
-      setIsValid(false);
-    }
-
-    // Validate password
-    if (!formData.password.trim()) {
-      errors.password = "Password is required";
-      setIsValid(false);
-    } else if (!passwordPattern.test(formData.password)) {
-      errors.password =
-        "Password must have at least 8 characters, 1 letter, 1 number, and 1 special character";
-      setIsValid(false);
-    }
-
-    if (!formData.confirm_password.trim()) {
-      errors.confirm_password = "Confirm password is required";
-      setIsValid(false);
-    } else if (formData.confirm_password !== formData.password) {
-      errors.confirm_password = "Passwords do not match";
-      setIsValid(false);
-    }
-
-    if (!formData.phone_number.trim()) {
-      errors.phone_number = "Phone number is required";
-      setIsValid(false);
-    } else if (!phonePattern.test(formData.phone_number)) {
-      errors.phone_number = "Invalid phone number format";
-      setIsValid(false);
-    }
-
-    setFormErrors(errors);
-    setIsValid(true);
   };
 
   return (
@@ -170,7 +124,10 @@ const SignUpForm: React.FC = () => {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
-            onClick={() => validateForm()}
+            onClick={() => {
+              const errors = validateForm(formData, fieldsToValidate);
+              setFormErrors(errors);
+            }}
           >
             Sign Up
           </button>

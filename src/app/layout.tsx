@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ReduxProvider } from "@/redux/provider";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,13 +18,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ReduxProvider>
-          <Navbar />
-          {children}
-        </ReduxProvider>
-      </body>
-    </html>
+    <>
+      <html lang="en">
+        <body className={inter.className}>
+          <Toaster />
+          <ReduxProvider>
+            <Navbar />
+            {children}
+          </ReduxProvider>
+        </body>
+      </html>
+    </>
   );
 }

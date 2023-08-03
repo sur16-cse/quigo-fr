@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import FormInput from '@/components/FormInput';
 import { Roles, SignInData } from '@/lib/types';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/redux/hooks';
+import { validateForm } from '@/utils/validateForm';
+import { toast } from 'react-hot-toast';
 
 const defaultFormData = {
   email: '',
@@ -10,11 +14,24 @@ const defaultFormData = {
 
 const ForgotPassword: React.FC = () => {
   const [formData, setFormData] = useState({ ...defaultFormData });
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const router = useRouter();
+  const fieldsToValidate = [
+    "email"
+  ];
+  const dispatch = useAppDispatch();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle form submission here
-    console.log(formData);
+
+    if (Object.keys(formErrors).length === 0) {
+      // Handle form submission here
+      // dispatch(setAppState({ title: "email", value: formData.email }));
+      console.log(formData);
+      toast.success("Email sent!");
+    } else {
+      setFormErrors((prevErrors) => ({ ...prevErrors, form: "Invalid form" }));
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -24,6 +41,7 @@ const ForgotPassword: React.FC = () => {
       ...prevFormData,
       [name]: value,
     }));
+    setFormErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
   return (
@@ -37,11 +55,16 @@ const ForgotPassword: React.FC = () => {
           value={formData.email}
           onChange={handleChange}
           required
+          error={formErrors.email}
         />
         <div className="flex items-center justify-center">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
+            onClick={() => {
+              const errors = validateForm(formData, fieldsToValidate);
+              setFormErrors(errors);
+            }}
           >
            Submit Email
           </button>
