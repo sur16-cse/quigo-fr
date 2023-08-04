@@ -14,7 +14,7 @@ const Navbar = () => {
   return (
     <header>
       <nav >
-        <div className="flex p-3 items-center justify-between bg-primary-color  text-center flex-row  text-secondary-color font-normal text-base">
+        <div className="flex p-3 items-center justify-between bg-primary-color  text-center flex-row  text-secondary-color font-normal text-base h-[10vh]">
           <div className="flex justify-start items-center  space-x-6 ml-8">
             <Link href="/">
               <Image

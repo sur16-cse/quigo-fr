@@ -1,5 +1,9 @@
-const BASE_URL = process.env.URL;
-console.log(BASE_URL);
+const BASE_URL = process.env.API_URL ;
+
+export function LoadEnv()
+{
+  console.log(BASE_URL)
+}
 
 export async function postData(payload?: any, endpoint?: any) {
   try {
