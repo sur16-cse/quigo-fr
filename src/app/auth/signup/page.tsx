@@ -60,14 +60,13 @@ const SignUpForm: React.FC = () => {
   };
 
   return (
-    <div className="flex pt-8 items-center justify-center flex-col">
-      <span className="block text-3xl my-2 font-semibold">
-        {"Don't have an account"}
-      </span>
-      <span className="text-sm my-2 font-light">
-        Sign up with your email and password
-      </span>
-      <form onSubmit={handleSubmit} className="w-full max-w-md ">
+    <div className="flex flex-col items-center justify-center pt-15">
+      <div className="shadow-md p-6 rounded-lg bg-white w-1/3 space-y-3">
+        <div className="text-center"> <h2 className="text-3xl font-semibold">{"Don't have an account?"}</h2>
+        <p className="text-sm font-light">Sign up with your email and password</p></div>
+       
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
         <FormInput
           label="Name"
           name="name"
@@ -121,23 +120,25 @@ const SignUpForm: React.FC = () => {
           error={formErrors.confirm_password}
         />
         <div className="flex items-center justify-center">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-            onClick={() => {
-              const errors = validateForm(formData, fieldsToValidate);
-              setFormErrors(errors);
-            }}
-          >
-            Sign Up
-          </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+              onClick={() => {
+                const errors = validateForm(formData, fieldsToValidate);
+                setFormErrors(errors);
+              }}
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+        
+        <div className="text-gray-500 text-center">
+          Already have an account?{" "}
+          <Link href="/auth/login" className="text-blue-800 focus:text-blue-600">
+            Login
+          </Link>
         </div>
-      </form>
-      <div className="relative mb-10 text-gray-500 mt-3">
-        Already have an account?{" "}
-        <Link href="/auth/login" className="text-blue-800 focus:text-blue-600">
-          Login
-        </Link>
       </div>
     </div>
   );

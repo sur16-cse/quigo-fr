@@ -13,7 +13,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <header>
-      <nav>
+      <nav >
         <div className="flex p-3 items-center justify-between bg-primary-color  text-center flex-row  text-secondary-color font-normal text-base">
           <div className="flex justify-start items-center  space-x-6 ml-8">
             <Link href="/">
@@ -24,15 +24,15 @@ const Navbar = () => {
                 height={100}
               />
             </Link>
-            <Link href="/safety">
+            {/* <Link href="/safety">
               <p>Safety</p>
-            </Link>
+            </Link> */}
           </div>
           <div className="flex space-x-7 flex-row items-center mr-8">
-            <Link href="/search" className="flex space-x-2 items-center">
+            {/* <Link href="/search" className="flex space-x-2 items-center">
               <BsSearch />
               <span>Search</span>
-            </Link>
+            </Link> */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="flex space-x-2 items-center"
@@ -46,7 +46,7 @@ const Navbar = () => {
               {isMenuOpen ? (
                 <>
                   <MdOutlineKeyboardArrowUp />
-                  <div className="absolute right-10 top-16 w-60 mt-1 rounded-md border-0 drop-shadow-xl z-20 p-1">
+                  <div className="absolute right-10 top-16 w-60 mt-1 bg-white rounded-md border-0 drop-shadow-xl z-20 p-1">
                     <Link
                       className="px-4 py-2 flex space-x-9 items-center justify-between"
                       href="/auth/login"
