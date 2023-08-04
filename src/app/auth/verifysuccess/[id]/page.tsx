@@ -1,17 +1,25 @@
 "use client"
 import { RootState } from "@/redux/store";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
+import { getData } from "@/domain/auth/api";
 
 
 const VerifySuccess = () => {
-   const email=useSelector((state: RootState) => state.appState.email)
-    console.log(email)
 
     useEffect(() => {
-      get
+    const id = window.location.pathname.split("/")[3];
+
+    if (id) {
+      getData(`/verifysuccess/`,{},id)
+        .then((data) => {
+          console.log(data);
+        }
+        )
+    }
+      
     }, []);
 
   return (

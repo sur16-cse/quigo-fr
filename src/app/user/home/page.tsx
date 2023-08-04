@@ -2,7 +2,11 @@
 import FormInput from '@/components/FormInput';
 import { validateForm } from '@/utils/validateForm';
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import mapboxgl from 'mapbox-gl';
+import { loadComponents } from 'next/dist/server/load-components';
+
+mapboxgl.accessToken = 'pk.eyJ1Ijoia3Z2aWsyMDIwIiwiYSI6ImNsa3c2MGhoMTA3aHUzZG4wcGJtb3I5eHYifQ.EB00O_zOya6wGKM_YEL6dQ';
 
 const HomePage = () => {
 
@@ -10,6 +14,72 @@ const HomePage = () => {
     pickupLocation: '',
     dropLocation: '',
   };
+
+  const [location, setLocation] = useState({ latitude: 12.971599, longitude: 77.594566 });
+  const [pickupCoordinates, setPickupCoordinates] = useState({ latitude: 0, longitude: 0 });
+  const [dropoffCoordinates, setDropoffCoordinates] = useState({ latitude: 0, longitude: 0 });
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+
+    const map = new mapboxgl.Map({
+      container: 'map', // container ID
+      style: 'mapbox://styles/mapbox/streets-v12', // style URL
+      center: [location.longitude, location.latitude], // starting position [lng, lat]
+      zoom: 9, // starting zoom
+    });
+  }
+
+  const getPickupCoordinates = (pickup: String) => {
+    fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${pickup}.json?access_token=${mapboxgl.accessToken}`
+    )
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.features[0].center);
+        setPickupCoordinates({
+          latitude: data.features[0].center[1],
+          longitude: data.features[0].center[0]
+        })
+      })
+  }
+
+  const getDropoffCoordinates = (dropoff: String) => {
+    fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${dropoff}.json?access_token=${mapboxgl.accessToken}`
+    )
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.features[0].center);
+        setDropoffCoordinates({
+          latitude: data.features[0].center[1],
+          longitude: data.features[0].center[0]
+        })
+      })
+  }
+
+  const getTravelLocationCoordinates = (pickup: string, dropoff: string) => {
+    getPickupCoordinates(pickup)
+    getDropoffCoordinates(dropoff)
+
+    
+
+  }
+
+
+
+  useEffect(() => {
+    getLocation();
+  }, [location.latitude]);
 
 
   const [formData, setFormData] = useState({ ...defaultFormData });
@@ -24,9 +94,16 @@ const HomePage = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log("handleSubmit");
+
+    getTravelLocationCoordinates(formData.pickupLocation, formData.dropLocation);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
+    setFormData({
+      ...formData,
+      [event.currentTarget.name]: event.currentTarget.value,
+    });
 
   };
 
@@ -58,8 +135,8 @@ const HomePage = () => {
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
                 onClick={() => {
-                  const errors = validateForm(formData, fieldsToValidate);
-                  setFormErrors(errors);
+                  // const errors = validateForm(formData, fieldsToValidate);
+                  // setFormErrors(errors);
                 }}
               >
                 Create Ride
@@ -69,7 +146,7 @@ const HomePage = () => {
 
         </div>
         <div className='flex justify-center items-center w-[70vw] bg-slate-500'>
-
+          <div id="map" className='w-[70vw] h-[90vh]'></div>
         </div>
       </div>
     </>

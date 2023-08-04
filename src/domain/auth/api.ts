@@ -7,7 +7,7 @@ export function LoadEnv()
 
 export async function postData(payload?: any, endpoint?: any) {
   try {
-    const data = await fetch(BASE_URL+endpoint, {
+    const data = await fetch(BASE_URL+ endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,13 +24,14 @@ export async function postData(payload?: any, endpoint?: any) {
 }
 
 
-export async function getData(url?: any, params?: any, id?: number) {
+export async function getData(endpoint?: any, params?: any, id?: string | string[]) {
   let URL;
 
-  if (id != undefined) URL = url + `/${id}`
-  else URL = url + `?` + new URLSearchParams(params);
-  console.log(URL)
+  if (id != undefined) URL = BASE_URL+ endpoint + `${id}`
+  else URL = BASE_URL+ endpoint + `?` + new URLSearchParams(params);
+
   try {
+    console.log(URL);
     const data = await fetch(URL, {
       headers: {
         // Authorization: "Bearer " + auth,
