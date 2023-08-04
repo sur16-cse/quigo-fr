@@ -1,9 +1,16 @@
-const BASE_URL = process.env.URL;
+console.log(process.env.API_URL!)
+const BASE_URL = process.env.API_URL!;
 console.log(BASE_URL);
 
-export async function postData(payload?: any, endpoint?: any) {
+
+
+
+
+export async function postData(payload: any, endpoint: string) {
   try {
-    const data = await fetch(BASE_URL+ endpoint, {
+    console.log(process.env.API_URL!)
+// console.log(BASE_URL)
+    const data = await fetch(process.env.API_URL!+endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -12,7 +12,7 @@ const FormInput: React.FC<FormInputProps> = ({
   error,
 }) => {
   const hasValue = value && value.toString().length > 0;
-  console.log(error);
+
 
   return (
     <div className="relative z-0 w-full mb-6 group">

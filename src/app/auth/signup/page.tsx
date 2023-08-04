@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormInput from "@/components/FormInput";
 import Select from "@/components/Select";
 import { Roles, SignUpData } from "@/lib/types";
@@ -8,6 +8,7 @@ import { setAppState } from "@/redux/slices/appStateReducer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { validateForm } from "@/utils/validateForm";
+import { postData } from "@/domain/auth/api";
 
 const defaultFormData: SignUpData = {
   name: "",
@@ -33,15 +34,21 @@ const SignUpForm: React.FC = () => {
     "phone_number",
   ];
 
-  const handleSubmit = (event: React.FormEvent) => {
+  // useEffect(() => {
+
+  // }, []);
+
+  const handleSubmit = async(event: React.FormEvent) => {
     event.preventDefault();
 
     if (Object.keys(formErrors).length === 0) {
       // Handle form submission here
       dispatch(setAppState({ title: "email", value: formData.email }));
       console.log(formData);
+      let data = await postData(formData,"/register");
+      console.log(data+"   api response");
       // Submit the form or navigate to the next page
-      router.push("/auth/verifyemail");
+      // router.push("/auth/verifyemail");
     } else {
       setFormErrors((prevErrors) => ({ ...prevErrors, form: "Invalid form" }));
     }
@@ -51,7 +58,6 @@ const SignUpForm: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = event.target;
-    console.log(name, value);
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
