@@ -10,6 +10,10 @@ const VerifySuccess = () => {
    const email=useSelector((state: RootState) => state.appState.email)
     console.log(email)
 
+    useEffect(() => {
+      get
+    }, []);
+
   return (
     <div className="flex items-center justify-center flex-col space-y-3 text-gray-600 text-lg p-28">
       <div className="text-black font-bold text-4xl">{"Welcome to QUIGO"}</div>

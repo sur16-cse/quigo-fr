@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ReduxProvider } from "@/redux/provider";
 import { Toaster } from "react-hot-toast";
+import "mapbox-gl/dist/mapbox-gl.css"
 
 const inter = Inter({ subsets: ["latin"] });
 

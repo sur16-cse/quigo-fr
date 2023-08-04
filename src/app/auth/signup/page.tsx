@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { validateForm } from "@/utils/validateForm";
 import { postData } from "@/domain/auth/api";
+import { toast } from "react-hot-toast";
 
 const defaultFormData: SignUpData = {
   name: "",
@@ -34,10 +35,6 @@ const SignUpForm: React.FC = () => {
     "phone_number",
   ];
 
-  // useEffect(() => {
-
-  // }, []);
-
   const handleSubmit = async(event: React.FormEvent) => {
     event.preventDefault();
 
@@ -46,9 +43,16 @@ const SignUpForm: React.FC = () => {
       dispatch(setAppState({ title: "email", value: formData.email }));
       console.log(formData);
       let data = await postData(formData,"/register");
-      console.log(data+"   api response");
-      // Submit the form or navigate to the next page
-      // router.push("/auth/verifyemail");
+      console.log(data);
+      if(data.status === "success"){
+        toast.success(data.message)
+        router.push("/auth/verifyemail");}
+        else if(data.status === "fail"){  
+        toast.error(data.message)
+        }
+        else if(data.status === "error"){  
+          toast.error(data.message)
+          }
     } else {
       setFormErrors((prevErrors) => ({ ...prevErrors, form: "Invalid form" }));
     }
