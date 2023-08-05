@@ -44,8 +44,6 @@ const LoginForm: React.FC = () => {
         else if(data.status === "error"){  
           toast.error(data.message)
           }
-      // Submit the form or navigate to the next page
-    
     } else {
       setFormErrors((prevErrors) => ({ ...prevErrors, form: "Invalid form" }));
     }

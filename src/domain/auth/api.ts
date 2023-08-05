@@ -33,6 +33,7 @@ export async function getData(endpoint?: any, params?: any, id?: string | string
   try {
     console.log(URL);
     const data = await fetch(URL, {
+      method: "GET",
       headers: {
         // Authorization: "Bearer " + auth,
       },
@@ -62,6 +63,30 @@ export async function putData(url?: string, payload?: any, id?: number) {
     const resData = await response.json();
     return resData;
   } catch (e) {
+    console.error("Error", e);
+  }
+}
+
+export async function patchData(endpoint?: any, params?: any, id?: string | string[], payload ?: any) {
+  let URL;
+
+  if (id != undefined) URL = BASE_URL+ endpoint + `${id}`
+  else URL = BASE_URL+ endpoint + `?` + new URLSearchParams(params);
+  try {
+    console.log(URL);
+    const data = await fetch(URL, {
+      method: "PATCH",
+      headers: {
+        // Authorization: "Bearer " + auth,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const res = await data.json();
+    return res;
+  } catch (e) {
+    
     console.error("Error", e);
   }
 }

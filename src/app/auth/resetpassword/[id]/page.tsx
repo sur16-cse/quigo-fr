@@ -1,9 +1,11 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FormInput from '@/components/FormInput';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/redux/hooks';
 import { validateForm } from '@/utils/validateForm';
+import { patchData } from '@/domain/auth/api';
+import toast from 'react-hot-toast';
 
 const defaultFormData = {
   password: '',
@@ -14,21 +16,39 @@ const ResetPassword: React.FC = () => {
   const [formData, setFormData] = useState({ ...defaultFormData });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const router = useRouter();
+  const [id, setId] = useState("");
   const fieldsToValidate = [
     "password",
     "confirm_password",
   ];
   const dispatch = useAppDispatch();
 
-  const handleSubmit = (event: React.FormEvent) => {
+  useEffect(() => {
+    const id = window.location.pathname.split("/")[3];
+    setId(id);
+  }, []);
+
+  const handleSubmit = async(event: React.FormEvent) => {
     event.preventDefault();
 
     if (Object.keys(formErrors).length === 0) {
-      // Handle form submission here
-      // dispatch(setAppState({ title: "email", value: formData.email }));
-      console.log(formData);
-      // Submit the form or navigate to the next page
-      router.push("/auth/login");
+      if(id){
+      let data = await patchData( "/resetpassword/",{},id,formData );
+      console.log(data);
+      if(data.status === "success"){
+        toast.success(data.message)
+        router.push("/auth/login");
+      }
+        else if(data.status === "fail"){  
+        toast.error(data.message)
+        }
+        else if(data.status === "error"){  
+          toast.error(data.message)
+          }
+      }  
+     else{
+      toast.error("Invalid Link")
+     }
     } else {
       setFormErrors((prevErrors) => ({ ...prevErrors, form: "Invalid form" }));
     }
@@ -44,10 +64,14 @@ const ResetPassword: React.FC = () => {
   };
 
   return (
-    <div className="flex pt-32 items-center justify-center w-screen flex-col space-y-2">
-        <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-2">{"Choose a new password."}</h1>
-      <div className='text-gray-600 text-lg pb-7'>{"It must have at least 8 characters, 1 letter, 1 number and 1 special character."}</div>
-      <form onSubmit={handleSubmit} className="w-full max-w-sm">
+   
+      <div className="flex flex-col items-center justify-center pt-16">
+      <div className="shadow-md p-6 rounded-lg bg-white w-1/3 gap-y-3">
+        <div className="text-center"> <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-2">{"Choose a new password."}</h1>
+      <p className='text-gray-600 text-lg pb-7'>{"It must have at least 8 characters, 1 letter, 1 number and 1 special character."}</p></div>
+       
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
         <FormInput
           label="Password"
           name="password"
@@ -80,6 +104,7 @@ const ResetPassword: React.FC = () => {
         </div>
       </form>
     </div>
+  </div>
   );
 };
 
