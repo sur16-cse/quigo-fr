@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/redux/hooks';
 import { setAppState } from '@/redux/slices/appStateReducer';
 import { validateForm } from '@/utils/validateForm';
+import { postData } from '@/domain/auth/api';
+import toast from 'react-hot-toast';
 
 const defaultFormData: SignInData = {
   email: '',
@@ -24,15 +26,26 @@ const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async(event: React.FormEvent) => {
     event.preventDefault();
 
     if (Object.keys(formErrors).length === 0) {
       // Handle form submission here
       // dispatch(setAppState({ title: "email", value: formData.email }));
       console.log(formData);
+      let data = await postData(formData,"/login");
+      console.log(data);
+      if(data.status === "success"){
+        router.push("/user/home");
+      }
+        else if(data.status === "fail"){  
+        toast.error(data.message)
+        }
+        else if(data.status === "error"){  
+          toast.error(data.message)
+          }
       // Submit the form or navigate to the next page
-      router.push("/user/home");
+    
     } else {
       setFormErrors((prevErrors) => ({ ...prevErrors, form: "Invalid form" }));
     }
@@ -49,8 +62,13 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="flex pt-32 items-center justify-center w-screen flex-col">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm">
+    <div className="flex flex-col items-center justify-center pt-16">
+      <div className="shadow-md p-6 rounded-lg bg-white w-1/3 gap-y-3">
+        <div className="text-center mb-9"> <h2 className="text-3xl font-semibold">{"Already have an account"}</h2>
+        <p className="text-sm font-light">Sign in with your email and password</p></div>
+       
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
         <FormInput
           label="Email"
           name="email"
@@ -82,7 +100,7 @@ const LoginForm: React.FC = () => {
           </button>
         </div>
       </form>
-      <div className="relative mt-5 text-sm">
+      <div className="relative mt-5 text-sm text-center">
         <div className="inline-flex justify-start items-center max-w-sm">
           <span className="mr-2">Not have an account yet?</span>
           <Link href="/auth/signup" className="text-blue-600 focus:text-blue-800">
@@ -98,6 +116,7 @@ const LoginForm: React.FC = () => {
           </span>
         </div>
       </div>
+    </div>
     </div>
   );
 };

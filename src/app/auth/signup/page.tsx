@@ -70,13 +70,13 @@ const SignUpForm: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center pt-15">
-      <div className="shadow-md p-6 rounded-lg bg-white w-1/3 space-y-3">
+    <div className="flex flex-col items-center justify-center pt-16">
+      <div className="shadow-md p-6 rounded-lg bg-white w-1/3 gap-y-3">
         <div className="text-center"> <h2 className="text-3xl font-semibold">{"Don't have an account?"}</h2>
         <p className="text-sm font-light">Sign up with your email and password</p></div>
        
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
         <FormInput
           label="Name"
           name="name"
