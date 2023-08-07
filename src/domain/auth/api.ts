@@ -38,6 +38,7 @@ export async function getData(endpoint?: any, params?: any, id?: string | string
       headers: {
         // Authorization: "Bearer " + auth,
       },
+      credentials: "include",
     });
 
     const res = await data.json();
@@ -81,6 +82,7 @@ export async function patchData(endpoint?: any, params?: any, id?: string | stri
         // Authorization: "Bearer " + auth,
         "Content-Type": "application/json"
       },
+      credentials: "include",
       body: JSON.stringify(payload),
     });
 

@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { loadComponents } from 'next/dist/server/load-components';
 
-mapboxgl.accessToken = 'pk.eyJ1Ijoia3Z2aWsyMDIwIiwiYSI6ImNsa3c2MGhoMTA3aHUzZG4wcGJtb3I5eHYifQ.EB00O_zOya6wGKM_YEL6dQ';
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
 const HomePage = () => {
 
@@ -18,6 +18,7 @@ const HomePage = () => {
   const [location, setLocation] = useState({ latitude: 12.971599, longitude: 77.594566 });
   const [pickupCoordinates, setPickupCoordinates] = useState({ latitude: 0, longitude: 0 });
   const [dropoffCoordinates, setDropoffCoordinates] = useState({ latitude: 0, longitude: 0 });
+  
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -70,9 +71,6 @@ const HomePage = () => {
   const getTravelLocationCoordinates = (pickup: string, dropoff: string) => {
     getPickupCoordinates(pickup)
     getDropoffCoordinates(dropoff)
-
-    
-
   }
 
 

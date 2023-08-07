@@ -10,22 +10,27 @@ export function middleware(request: NextRequest) {
     path === "/auth/forgotpassword" ||
     path === "/auth/resetpassword" ||
     path === "/auth/verifysuccess" ||
-    path === "/verifysuccess/:path*" ||
+    path === "/auth/verifysuccess/:path*" ||
     path === "/auth/verifyemail";
 
   const token = request.cookies.get("token")?.value || "";
   const email = request.cookies.get("email")?.value || "";
 
+  if (!isPublicPath && !token && !email) {
+    if (path !== "/") {
+      return NextResponse.redirect(new URL("/", request.nextUrl));
+    }
+  }
+
   if (isPublicPath && token) {
     return NextResponse.redirect(new URL("/user/home", request.nextUrl));
   }
 
-  // If it's the verifyemail path and there's no token, redirect to signup
   if (path === "/auth/verifyemail" && !email) {
     return NextResponse.redirect(new URL("/auth/signup", request.nextUrl));
   }
 
-  if (path === "/auth/verifysuccess/:path*" && !email) {
+  if (path.startsWith("/auth/verifysuccess/") && !email) {
     return NextResponse.redirect(new URL("/auth/signup", request.nextUrl));
   }
 }
@@ -40,7 +45,8 @@ export const config = {
     "/auth/verifyemail",
     "/auth/forgotpassword",
     "/auth/resetpassword",
-    "/verifysuccess",
-    "/verifysuccess/:path*",
+    "/auth/verifysuccess",
+    "/auth/verifysuccess/:path*",
+    "/user/home",
   ],
 };

@@ -32,7 +32,7 @@ const LoginForm: React.FC = () => {
       let data = await postData(formData, "/login");
       console.log(data);
       if (data.status === "success") {
-        dispatch(setAppState({ email: formData.email, isLogged: true }));
+        dispatch(setAppState({current_role:data.role, isLogged: true }));
         router.push("/user/home");
       } else if (data.status === "fail") {
         toast.error(data.message);
