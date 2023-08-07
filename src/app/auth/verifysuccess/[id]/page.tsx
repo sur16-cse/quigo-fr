@@ -32,27 +32,27 @@ const VerifySuccess = () => {
 }, [data]);
 
   return (
-    <div className="flex items-center justify-center flex-col space-y-3 text-gray-600 text-lg p-28">
-      <div className="text-black font-bold text-4xl">{"Welcome to QUIGO"}</div>
+    <div className="flex items-center justify-center flex-col space-y-3 text-gray-600 text-lg p-36">
+      <div className="text-black font-bold text-4xl mb-4">{"Welcome to QUIGO"}</div>
       {data !== undefined &&
       data.message !== "Invalid verification code or user doesn't exists" ? (
         data.status === "success" ? (
-          <div className="font-semibold">
+          <div className="font-bold text-green-500">
             {`Congratulations, ${data.data}  has been verified!,`}
           </div>
         ) : (
           data.message === "User already verified" &&
           data.status === "fail" &&
           data.data === undefined && (
-            <div className="font-semibold">{`User already verified`}</div>
+            <div className="font-semibold text-blue-400">{`User already verified`}</div>
           )
         )
       ) : (
-        <div className="font-semibold">
+        <div className="font-semibold text-red-500">
           {"Invalid verification link or or user doesn't exists"}
         </div>
       )}
-      <div className="text-sm">
+      <div className="text-sm text-black">
         {`Riding into the future with Quigo: Where every journey is not just a ride, but a secure and seamless experience powered by blockchain technology.`}
       </div>
       <Link className="bg-blue-500 text-white p-2 rounded" href="/auth/login">

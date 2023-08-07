@@ -11,16 +11,18 @@ const VerifyEmail = () => {
     console.log(email)
 
   return (
-    <div className="flex items-center justify-center flex-col space-y-2 text-gray-600 text-lg p-28">
+    <div className="flex items-center justify-center flex-col space-y-2  p-36">
       <CiMail size={100}/>
-      <div>{"Please verify your email address"}</div>
-      <div>
+      <div className="text-xl font-semibold text-blue-500">{"Please verify your email address"}</div>
+      <div className="text-lg">
         {
           "Great! You're almost there. Before you can enjoy ride of quigo, you'll need to verify your email address."
         }
       </div>
-      <div>
-        {`We've sent a verification email to ${email}. Please check your inbox and click the link to continue.`}
+      <div className="text-base">
+        <span>{`We've sent a verification email to`} </span>
+        <b>{`${email}`}</b> 
+        <span>. Please check your inbox and click the link to continue.</span>
       </div>
     </div>
   );

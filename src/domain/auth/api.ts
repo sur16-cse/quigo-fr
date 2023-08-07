@@ -13,6 +13,7 @@ export async function postData(payload?: any, endpoint?: any) {
         "Content-Type": "application/json",
         // Authorization: "Bearer " + auth,
       },
+      credentials: "include",
       body: JSON.stringify(payload),
     });
     const res = await data.json();

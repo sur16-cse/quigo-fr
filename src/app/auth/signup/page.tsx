@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FormInput from "@/components/FormInput";
 import Select from "@/components/Select";
 import { Roles, SignUpData } from "@/lib/types";
@@ -40,7 +40,7 @@ const SignUpForm: React.FC = () => {
 
     if (Object.keys(formErrors).length === 0) {
       // Handle form submission here
-      dispatch(setAppState({ title: "email", value: formData.email }));
+      dispatch(setAppState({ email: formData.email, }));
       console.log(formData);
       let data = await postData(formData,"/register");
       console.log(data);
@@ -70,13 +70,13 @@ const SignUpForm: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center pt-16">
-      <div className="shadow-md p-6 rounded-lg bg-white w-1/3 gap-y-3">
-        <div className="text-center"> <h2 className="text-3xl font-semibold">{"Don't have an account?"}</h2>
+    <div className="flex flex-col items-center justify-center pt-6">
+      <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] p-6 rounded-lg bg-white w-1/3 gap-y-3">
+        <div className="text-center mb-10"> <h2 className="text-3xl font-semibold">{"Don't have an account?"}</h2>
         <p className="text-sm font-light">Sign up with your email and password</p></div>
        
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 mb-2" autoComplete="off">
         <FormInput
           label="Name"
           name="name"
@@ -131,7 +131,7 @@ const SignUpForm: React.FC = () => {
         />
         <div className="flex items-center justify-center">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-4 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
               onClick={() => {
                 const errors = validateForm(formData, fieldsToValidate);
