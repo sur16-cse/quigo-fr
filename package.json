@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mapbox/search-js-react": "^1.0.0-beta.17",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "20.4.3",
     "@types/react": "18.2.15",

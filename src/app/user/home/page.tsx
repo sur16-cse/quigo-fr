@@ -26,7 +26,6 @@ const HomePage = () => {
   });
   const [formData, setFormData] = useState({ ...defaultFormData });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-
   const fieldsToValidate = ["pickupLocation", "dropLocation"];
 
   const getCordinates = async (location: string) => {
@@ -77,9 +76,7 @@ const HomePage = () => {
     // setFormData({ ...defaultFormData })
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -96,7 +93,7 @@ const HomePage = () => {
             <div className=" mb-6">
               <h2 className="text-3xl font-semibold">{"Get a Ride"}</h2>
             </div>
-
+            
             <form onSubmit={handleSubmit} className="w-full  max-w-sm">
               <div className="flex flex-row">
                 {/* <TbCircleDotFilled size={30}/>  */}
