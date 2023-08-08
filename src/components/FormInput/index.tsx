@@ -13,6 +13,7 @@ const FormInput: React.FC<FormInputProps> = ({
   width,
 }) => {
   const hasValue = value && value.toString().length > 0;
+  const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div className="relative z-0 w-full mb-6 group">
       <input
