@@ -39,3 +39,8 @@ export interface FormSelectProps {
   interfaceType: Object
   error: string;
 }
+
+export interface RiderHomePageProps {
+  pickupLocation: string,
+    dropLocation: string,
+}
