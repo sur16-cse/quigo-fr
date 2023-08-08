@@ -30,7 +30,8 @@ export interface FormInputProps {
   ) => void;
   required?: boolean;
   error: string;
-  autocomplete?: string;
+  autoComplete? : string;
+  width?: number;
 }
 
 export interface FormSelectProps {

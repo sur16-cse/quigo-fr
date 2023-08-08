@@ -8,6 +8,12 @@ import { loadComponents } from "next/dist/server/load-components";
 import Map from "@/components/Map";
 import { TbCircleDotFilled } from "react-icons/tb";
 import { RiderHomePageProps } from "@/lib/types";
+import dynamic from "next/dynamic";
+
+const AddressAutofill: any = dynamic(
+  () => import("@mapbox/search-js-react").then((mod) => mod.AddressAutofill) as any,
+  { ssr: false }
+);
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 const defaultFormData: RiderHomePageProps = {
@@ -95,17 +101,38 @@ const HomePage = () => {
             </div>
             
             <form onSubmit={handleSubmit} className="w-full  max-w-sm">
-              <div className="flex flex-row">
+              <div className="flex flex-row " >
                 {/* <TbCircleDotFilled size={30}/>  */}
-                <FormInput
-                  label="Pickup Location"
-                  name="pickupLocation"
-                  type="text"
-                  value={formData.pickupLocation}
-                  onChange={handleChange}
-                  required
-                  error={formErrors.email}
-                />
+                <AddressAutofill accessToken={mapboxgl.accessToken} options={{
+                  language: 'en',
+                  country: 'IN',
+                }}
+                theme={{
+                  variables: {
+                    fontFamily: 'Avenir, sans-serif',
+                    unit: '12px',
+                    padding: '0.5em',
+                    borderRadius: '0',
+                    boxShadow: '0 0 0 1px silver',
+                   minWidth: '300px',
+                    colorBackground: 'purple',
+                  }
+                  }} 
+                >
+                   <div className="flex flex-row " >
+                  <FormInput
+                    label="Pickup Location"
+                    name="pickupLocation"
+                    type="text"
+                    value={formData.pickupLocation}
+                    onChange={handleChange}
+                    required
+                    error={formErrors.email}
+                    autoComplete="street-address"
+                    width={72}
+                  />
+                  </div>
+                </AddressAutofill>
               </div>
 
               <FormInput
