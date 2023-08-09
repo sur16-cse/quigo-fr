@@ -11,7 +11,8 @@ import { RiderHomePageProps } from "@/lib/types";
 import dynamic from "next/dynamic";
 
 const AddressAutofill: any = dynamic(
-  () => import("@mapbox/search-js-react").then((mod) => mod.AddressAutofill) as any,
+  () =>
+    import("@mapbox/search-js-react").then((mod) => mod.AddressAutofill) as any,
   { ssr: false }
 );
 
@@ -82,7 +83,9 @@ const HomePage = () => {
     // setFormData({ ...defaultFormData })
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -99,51 +102,72 @@ const HomePage = () => {
             <div className=" mb-6">
               <h2 className="text-3xl font-semibold">{"Get a Ride"}</h2>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="w-full  max-w-sm">
-              <div className="flex flex-row " >
+              <div className="flex flex-row ">
                 {/* <TbCircleDotFilled size={30}/>  */}
-                <AddressAutofill accessToken={mapboxgl.accessToken} options={{
-                  language: 'en',
-                  country: 'IN',
-                }}
-                theme={{
-                  variables: {
-                    fontFamily: 'Avenir, sans-serif',
-                    unit: '12px',
-                    padding: '0.5em',
-                    borderRadius: '0',
-                    boxShadow: '0 0 0 1px silver',
-                   minWidth: '300px',
-                    colorBackground: 'purple',
-                  }
-                  }} 
+                <AddressAutofill
+                  accessToken={mapboxgl.accessToken}
+                  options={{
+                    language: "en",
+                    country: "IN",
+                  }}
+                  theme={{
+                    variables: {
+                      fontFamily: "sans-serif",
+                      unit: "12px",
+                      padding: "0.5em",
+                      borderRadius: "0.25em",
+                      boxShadow: "1px 2px 2px 1px silver",
+                    },
+                  }}      
                 >
-                   <div className="flex flex-row " >
+                
+                    <FormInput
+                      label="Pickup Location"
+                      name="pickupLocation"
+                      type="text"
+                      value={formData.pickupLocation}
+                      onChange={handleChange}
+                      required
+                      error={formErrors.email}
+                      autoComplete="street-address"
+                      width={72}
+                    />
+                 
+                </AddressAutofill>
+              </div>
+              <div>
+                <AddressAutofill
+                  accessToken={mapboxgl.accessToken}
+                  options={{
+                    language: "en",
+                    country: "IN",
+                  }}
+                  theme={{
+                    variables: {
+                      fontFamily: "sans-serif",
+                      unit: "12px",
+                      padding: "0.5em",
+                      borderRadius: "0.25em",
+                      boxShadow: "1px 2px 2px 1px silver",
+                    },
+                  }}
+                >
                   <FormInput
-                    label="Pickup Location"
-                    name="pickupLocation"
+                    label="Drop Location"
+                    name="dropLocation"
                     type="text"
-                    value={formData.pickupLocation}
+                    value={formData.dropLocation}
                     onChange={handleChange}
                     required
-                    error={formErrors.email}
+                    error={formErrors.password}
                     autoComplete="street-address"
                     width={72}
                   />
-                  </div>
                 </AddressAutofill>
               </div>
 
-              <FormInput
-                label="Drop Location"
-                name="dropLocation"
-                type="text"
-                value={formData.dropLocation}
-                onChange={handleChange}
-                required
-                error={formErrors.password}
-              />
               <div className="flex items-center justify-center">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
