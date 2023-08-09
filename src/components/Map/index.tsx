@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
+const turf:any = require("@turf/turf");
 
 const Map = ({ pickupCoordinates, dropoffCoordinates }: any) => {
   const [location, setLocation] = useState({
@@ -50,6 +51,42 @@ const Map = ({ pickupCoordinates, dropoffCoordinates }: any) => {
         map.fitBounds(bounds, {
           padding: 100,
         });
+
+        const query = fetch(
+          `https://api.mapbox.com/directions/v5/mapbox//${pickupCoordinates.lng},${pickupCoordinates.lat};${dropoffCoordinates.lng},${dropoffCoordinates.lat}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+          { method: 'GET' }
+        ).then((response) => response.json())
+        .then((response) => {
+          const data = response.routes[0];
+          const route = data.geometry.coordinates;
+
+          const geojson:any = {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: route
+            }
+          };
+
+          map.addLayer({
+            id: "route",
+            type: "line",
+            source: {
+              type: "geojson",
+              data: geojson,
+            },
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-color": "#888",
+              "line-width": 8,
+            },
+          });
+        });
+
       }
     }
   }, [
