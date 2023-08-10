@@ -1,14 +1,20 @@
 "use client";
 import FormInput from "@/components/FormInput";
 import { validateForm } from "@/utils/validateForm";
-import React from "react";
+import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import { loadComponents } from "next/dist/server/load-components";
 import Map from "@/components/Map";
 import { TbCircleDotFilled } from "react-icons/tb";
-import { RiderHomePageProps } from "@/lib/types";
+import { RiderHomePageProps, coordinates } from "@/lib/types";
 import dynamic from "next/dynamic";
+import { RiderMapBoxProps } from "@/lib/types";
+
+const defaultCoordinates: coordinates = {
+  lat: 0,
+  lng: 0,
+};
 
 const AddressAutofill: any = dynamic(
   () =>
@@ -16,25 +22,23 @@ const AddressAutofill: any = dynamic(
   { ssr: false }
 );
 
+
+
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 const defaultFormData: RiderHomePageProps = {
   pickupLocation: "",
   dropLocation: "",
 };
 
+
 const HomePage = () => {
-  const [pickupCoordinates, setPickupCoordinates] = useState({
-    lat: null,
-    lng: null,
-  });
-  const [dropoffCoordinates, setDropoffCoordinates] = useState({
-    lat: null,
-    lng: null,
-  });
+  const [pickupCoordinates, setPickupCoordinates] = useState<RiderMapBoxProps["pickupCoordinates"]>({...defaultCoordinates });
+  const [dropoffCoordinates, setDropoffCoordinates] = useState<RiderMapBoxProps["dropoffCoordinates"]>({ ...defaultCoordinates});
   const [formData, setFormData] = useState({ ...defaultFormData });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const fieldsToValidate = ["pickupLocation", "dropLocation"];
-
+  const childRef = useRef<any>();
+  
   const getCordinates = async (location: string) => {
     try {
       const response = await fetch(
@@ -186,7 +190,8 @@ const HomePage = () => {
         <Map
           pickupCoordinates={pickupCoordinates}
           dropoffCoordinates={dropoffCoordinates}
-        />
+          ref={childRef} 
+           />
       </div>
     </>
   );

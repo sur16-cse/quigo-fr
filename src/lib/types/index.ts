@@ -30,7 +30,7 @@ export interface FormInputProps {
   ) => void;
   required?: boolean;
   error: string;
-  autoComplete? : string;
+  autoComplete?: string;
   width?: number;
 }
 
@@ -38,11 +38,26 @@ export interface FormSelectProps {
   label: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  interfaceType: Object
+  interfaceType: Object;
   error: string;
 }
 
+export interface coordinates {
+  lat: number;
+  lng: number;
+}
 export interface RiderHomePageProps {
-  pickupLocation: string,
-    dropLocation: string,
+  pickupLocation: string;
+  dropLocation: string;
+}
+
+export interface DriverHomePageProps {}
+
+export interface RiderMapBoxProps {
+  pickupCoordinates: coordinates ;
+  dropoffCoordinates: coordinates;
+  zoom: number;
+  distance: number | null | undefined;
+  duration: number | null | undefined;
+  location: coordinates;
 }
