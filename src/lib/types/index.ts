@@ -57,7 +57,7 @@ export interface RiderMapBoxProps {
   pickupCoordinates: coordinates ;
   dropoffCoordinates: coordinates;
   zoom: number;
-  distance: number | null | undefined;
-  duration: number | null | undefined;
+  distance: number | null ;
+  duration: number | null ;
   location: coordinates;
 }

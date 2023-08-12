@@ -1,7 +1,6 @@
 "use client";
 import FormInput from "@/components/FormInput";
 import { validateForm } from "@/utils/validateForm";
-import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import { loadComponents } from "next/dist/server/load-components";
@@ -22,23 +21,28 @@ const AddressAutofill: any = dynamic(
   { ssr: false }
 );
 
-
-
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 const defaultFormData: RiderHomePageProps = {
   pickupLocation: "",
   dropLocation: "",
 };
 
-
 const HomePage = () => {
-  const [pickupCoordinates, setPickupCoordinates] = useState<RiderMapBoxProps["pickupCoordinates"]>({...defaultCoordinates });
-  const [dropoffCoordinates, setDropoffCoordinates] = useState<RiderMapBoxProps["dropoffCoordinates"]>({ ...defaultCoordinates});
+  const [pickupCoordinates, setPickupCoordinates] = useState<
+    RiderMapBoxProps["pickupCoordinates"]
+  >({ ...defaultCoordinates });
+  const [dropoffCoordinates, setDropoffCoordinates] = useState<
+    RiderMapBoxProps["dropoffCoordinates"]
+  >({ ...defaultCoordinates });
   const [formData, setFormData] = useState({ ...defaultFormData });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const fieldsToValidate = ["pickupLocation", "dropLocation"];
-  const childRef = useRef<any>();
-  
+
+  const [childDistance, setChildDistance] =
+    useState<RiderMapBoxProps["distance"]>(null);
+  const [childDuration, setChildDuration] =
+    useState<RiderMapBoxProps["duration"]>(null);
+
   const getCordinates = async (location: string) => {
     try {
       const response = await fetch(
@@ -90,7 +94,11 @@ const HomePage = () => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = event.target;
+    let { name, value } = event.target;
+    if (name.includes("address-search")) {
+      name = name.split(" ")[0];
+    }
+    console.log(name);
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -101,7 +109,7 @@ const HomePage = () => {
   return (
     <>
       <div className="flex flex-row w-full bg-black h-[90vh] ">
-        <div className="flex  flex-col w-[30vw] bg-white pl-10 ">
+        <div className="flex  flex-col w-[30vw] bg-white pl-10 space-y-3">
           <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  p-10 rounded-lg bg-white w-[25vw]">
             <div className=" mb-6">
               <h2 className="text-3xl font-semibold">{"Get a Ride"}</h2>
@@ -124,21 +132,19 @@ const HomePage = () => {
                       borderRadius: "0.25em",
                       boxShadow: "1px 2px 2px 1px silver",
                     },
-                  }}      
+                  }}
                 >
-                
-                    <FormInput
-                      label="Pickup Location"
-                      name="pickupLocation"
-                      type="text"
-                      value={formData.pickupLocation}
-                      onChange={handleChange}
-                      required
-                      error={formErrors.email}
-                      autoComplete="street-address"
-                      width={72}
-                    />
-                 
+                  <FormInput
+                    label="Pickup Location"
+                    name="pickupLocation"
+                    type="text"
+                    value={formData.pickupLocation}
+                    onChange={handleChange}
+                    required
+                    error={formErrors.email}
+                    autoComplete="street-address"
+                    width={72}
+                  />
                 </AddressAutofill>
               </div>
               <div>
@@ -186,12 +192,19 @@ const HomePage = () => {
               </div>
             </form>
           </div>
+          {childDistance && childDuration && (
+            <div className="flex flex-col  space-y-2 shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2 p-2  rounded-lg bg-white w-[25vw]">
+              <div className="">Distance: {childDistance}</div>
+              <div className="">Duration: {childDuration}</div>
+            </div>
+          )}
         </div>
         <Map
           pickupCoordinates={pickupCoordinates}
           dropoffCoordinates={dropoffCoordinates}
-          ref={childRef} 
-           />
+          setChildDistance={setChildDistance}
+          setChildDuration={setChildDuration}
+        />
       </div>
     </>
   );
