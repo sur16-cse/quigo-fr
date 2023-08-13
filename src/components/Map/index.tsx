@@ -9,8 +9,6 @@ import mapboxgl from "mapbox-gl";
 import { TbCircleDotFilled } from "react-icons/tb";
 import { RiderMapBoxProps, coordinates } from "@/lib/types";
 
-/* eslint-disable react/display-name */
-
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 const defaultCoordinates: coordinates = {
   lat: 0,

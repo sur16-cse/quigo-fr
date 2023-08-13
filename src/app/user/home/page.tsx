@@ -9,6 +9,7 @@ import { TbCircleDotFilled } from "react-icons/tb";
 import { RiderHomePageProps, coordinates } from "@/lib/types";
 import dynamic from "next/dynamic";
 import { RiderMapBoxProps } from "@/lib/types";
+import { distanceToKm, durationToMinutes } from "@/utils/conversion";
 
 const defaultCoordinates: coordinates = {
   lat: 0,
@@ -37,6 +38,7 @@ const HomePage = () => {
   const [formData, setFormData] = useState({ ...defaultFormData });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const fieldsToValidate = ["pickupLocation", "dropLocation"];
+  const [isCreateRide, setIsCreateRide] = useState(false);
 
   const [childDistance, setChildDistance] =
     useState<RiderMapBoxProps["distance"]>(null);
@@ -88,6 +90,8 @@ const HomePage = () => {
       formData.pickupLocation,
       formData.dropLocation
     );
+
+    setIsCreateRide(true);
     // setFormData({ ...defaultFormData })
   };
 
@@ -109,10 +113,10 @@ const HomePage = () => {
   return (
     <>
       <div className="flex flex-row w-full bg-black h-[90vh] ">
-        <div className="flex  flex-col w-[30vw] bg-white pl-10 space-y-3">
-          <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  p-10 rounded-lg bg-white w-[25vw]">
+        <div className="flex  flex-col w-[32vw] bg-white pl-8 space-y-3">
+          <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
             <div className=" mb-6">
-              <h2 className="text-3xl font-semibold">{"Get a Ride"}</h2>
+              <h2 className="text-xl font-semibold">{"Get a Ride"}</h2>
             </div>
 
             <form onSubmit={handleSubmit} className="w-full  max-w-sm">
@@ -192,10 +196,55 @@ const HomePage = () => {
               </div>
             </form>
           </div>
-          {childDistance && childDuration && (
-            <div className="flex flex-col  space-y-2 shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2 p-2  rounded-lg bg-white w-[25vw]">
-              <div className="">Distance: {childDistance}</div>
-              <div className="">Duration: {childDuration}</div>
+          {isCreateRide && (
+            // formData.pickupLocation &&
+            // formData.dropLocation &&
+            <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
+              {/* <div className=" mb-2">
+                  <h2 className="text-xl font-semibold">{"Confirm a Ride"}</h2>
+                </div> */}
+              <div className="flex flex-col space-y-2 text-sm">
+                <div className="shadow-md p-2">
+                  Pickup: {formData.pickupLocation}
+                </div>
+                <div className="shadow-md p-2">
+                  Dropoff: {formData.dropLocation}
+                </div>
+                <div className="shadow-md p-2">
+                  Distance: {distanceToKm(childDistance!)}
+                </div>
+                <div className="shadow-md p-2">
+                  Duration: {durationToMinutes(childDuration!)}
+                </div>
+                <form action="">
+                  <label
+                    htmlFor="visitors"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Amount Pay:{" "}
+                  </label>
+                  <input
+                    type="number"
+                    id="visitors"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder=""
+                    required
+                    disabled
+                  ></input>
+                </form>
+                <div className="flex items-center justify-center pt-4">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                    onClick={() => {
+                      // const errors = validateForm(formData, fieldsToValidate);
+                      // setFormErrors(errors);
+                    }}
+                  >
+                    Confirm Ride
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
