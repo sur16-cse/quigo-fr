@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getData } from "@/domain/auth/api";
+import { getData } from "@/domain/api";
 import { toast } from "react-hot-toast";
 
 const VerifySuccess = () => {

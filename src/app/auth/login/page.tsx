@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { setAppState } from "@/redux/slices/appStateReducer";
 import { validateForm } from "@/utils/validateForm";
-import { postData } from "@/domain/auth/api";
+import { postData } from "@/domain/api";
 import toast from "react-hot-toast";
 
 const defaultFormData: SignInData = {

@@ -3,6 +3,8 @@ import React from "react";
 import { RiTimeLine } from "react-icons/ri";
 import { GrMap } from "react-icons/gr";
 import { LiaMoneyCheckAltSolid } from "react-icons/lia";
+import { BsFillSquareFill } from "react-icons/bs";
+import Footer from "../Footer";
 
 const Hero = () => {
   return (
@@ -82,11 +84,89 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col pl-20 pr-20 pt-8 w-[100vw]">
-        <h3 className="text-4xl line-clamp-2 font-bold text-blue-950 drop-shadow-md ">
-        How to use the Quigo
+      <div className="flex flex-col pl-20 pr-20 pt-8 pb-4 w-[100vw]">
+        <h3 className="text-4xl mb-4 line-clamp-2 font-bold text-blue-950 drop-shadow-md ">
+          How to use the Quigo
         </h3>
+        <div className="flex pl-36 pr-20">
+          <div className="w-[50vw] flex flex-col space-y-8">
+            <Image
+              src="/images/createAccount.png"
+              alt="hero"
+              width={100}
+              height={100}
+              className="rounded-lg"
+            />
+            <Image
+              src="/images/destination.png"
+              alt="hero"
+              width={100}
+              height={100}
+              className="rounded-lg"
+            />
+            <Image
+              src="/images/meetDriver.jpeg"
+              alt="hero"
+              width={100}
+              height={100}
+              className="rounded-lg"
+            />
+            <Image
+              src="/images/checkRide.png"
+              alt="hero"
+              width={100}
+              height={100}
+              className="rounded-lg"
+            />
+            <Image
+              src="/images/relax.png"
+              alt="hero"
+              width={100}
+              height={100}
+              className="rounded-lg pt-6"
+            />
+          </div>
+          <div className="w-50vw">
+            <ol className="relative text-gray-500 border-l border-gray-200 dark:border-gray-700 dark:text-gray-900">
+              <li className="mb-28 ml-6">
+                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                  <BsFillSquareFill />
+                </span>
+                <h3 className="font-medium leading-tight">Create an account</h3>
+              </li>
+              <li className="mb-28 ml-6">
+                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                  <BsFillSquareFill />
+                </span>
+                <h3 className="font-medium leading-tight">
+                  Enter your destination
+                </h3>
+              </li>
+              <li className="mb-28 ml-6">
+                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                  <BsFillSquareFill />
+                </span>
+                <h3 className="font-medium leading-tight">Meet your driver</h3>
+              </li>
+              <li className="mb-28 ml-6">
+                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                  <BsFillSquareFill />
+                </span>
+                <h3 className="font-medium leading-tight">Check your ride</h3>
+              </li>
+              <li className="mb-28 ml-6">
+                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                  <BsFillSquareFill />
+                </span>
+                <h3 className="font-medium leading-tight">
+                  Sit back and relax
+                </h3>
+              </li>
+            </ol>
+          </div>
+        </div>
       </div>
+      <Footer />
     </>
   );
 };

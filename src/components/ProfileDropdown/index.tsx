@@ -7,7 +7,7 @@ import { CgProfile } from "react-icons/cg";
 import { BiLogOutCircle } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { getData } from "@/domain/auth/api";
+import { getData } from "@/domain/api";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";

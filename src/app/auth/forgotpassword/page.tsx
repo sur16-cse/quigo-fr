@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { validateForm } from "@/utils/validateForm";
 import { toast } from "react-hot-toast";
-import { postData } from "@/domain/auth/api";
+import { postData } from "@/domain/api";
 import { data } from "autoprefixer";
 
 const defaultFormData = {

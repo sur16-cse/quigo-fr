@@ -1,6 +1,6 @@
 import Hero from '@/components/Hero'
 import Image from 'next/image'
-import {LoadEnv} from '@/domain/auth/api'
+import {LoadEnv} from '@/domain/api'
 
 export default function Home() {
   LoadEnv()

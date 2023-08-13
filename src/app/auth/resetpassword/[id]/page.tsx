@@ -4,7 +4,7 @@ import FormInput from "@/components/FormInput";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { validateForm } from "@/utils/validateForm";
-import { patchData } from "@/domain/auth/api";
+import { patchData } from "@/domain/api";
 import toast from "react-hot-toast";
 
 const defaultFormData = {

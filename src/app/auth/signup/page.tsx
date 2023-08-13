@@ -8,7 +8,7 @@ import { setAppState } from "@/redux/slices/appStateReducer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { validateForm } from "@/utils/validateForm";
-import { postData } from "@/domain/auth/api";
+import { postData } from "@/domain/api";
 import { toast } from "react-hot-toast";
 
 const defaultFormData: SignUpData = {
