@@ -27,7 +27,7 @@ const Footer = () => {
         <div>Outstations</div>
       </div>
       <div className="text-sm font-extrabold text-blue-950">
-        © 2021 Quigo, Inc. All rights reserved.
+        © 2023 Quigo, Inc. All rights reserved.
       </div>
     </div>
   );

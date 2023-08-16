@@ -26,6 +26,7 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 const defaultFormData: RiderHomePageProps = {
   pickupLocation: "",
   dropLocation: "",
+  amount: 0,
 };
 
 const HomePage = () => {
@@ -39,6 +40,7 @@ const HomePage = () => {
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const fieldsToValidate = ["pickupLocation", "dropLocation"];
   const [isCreateRide, setIsCreateRide] = useState(false);
+  const [isConfirmRide, setIsConfirmRide] = useState(false);
 
   const [childDistance, setChildDistance] =
     useState<RiderMapBoxProps["distance"]>(null);
@@ -82,6 +84,15 @@ const HomePage = () => {
     }
   };
 
+  const handleConfirmSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log("handleConfirmSubmit");
+    if (isCreateRide && formData.amount!=0) {
+      setIsConfirmRide(true);
+    }
+    // setFormData({ ...defaultFormData })
+  }
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log("handleSubmit");
@@ -90,8 +101,8 @@ const HomePage = () => {
       formData.pickupLocation,
       formData.dropLocation
     );
-
-    setIsCreateRide(true);
+    console.log(childDistance, childDuration)
+     setIsCreateRide(true); 
     // setFormData({ ...defaultFormData })
   };
 
@@ -110,99 +121,112 @@ const HomePage = () => {
     setFormErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
+  console.log(isCreateRide)
+
   return (
     <>
       <div className="flex flex-row w-full bg-black h-[90vh] ">
         <div className="flex  flex-col w-[32vw] bg-white pl-8 space-y-3">
-          <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
-            <div className=" mb-6">
-              <h2 className="text-xl font-semibold">{"Get a Ride"}</h2>
+          {isConfirmRide ? (
+            <div className="my-3 flex flex-col justify-center">
+            <div className="relative mx-auto mt-6 animate-[propel_5s_infinite]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="cornflowerblue" className="h-16 w-16">
+                <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+              </svg>
             </div>
-
-            <form onSubmit={handleSubmit} className="w-full  max-w-sm">
-              <div className="flex flex-row ">
-                {/* <TbCircleDotFilled size={30}/>  */}
-                <AddressAutofill
-                  accessToken={mapboxgl.accessToken}
-                  options={{
-                    language: "en",
-                    country: "IN",
-                  }}
-                  theme={{
-                    variables: {
-                      fontFamily: "sans-serif",
-                      unit: "12px",
-                      padding: "0.5em",
-                      borderRadius: "0.25em",
-                      boxShadow: "1px 2px 2px 1px silver",
-                    },
-                  }}
-                >
-                  <FormInput
-                    label="Pickup Location"
-                    name="pickupLocation"
-                    type="text"
-                    value={formData.pickupLocation}
-                    onChange={handleChange}
-                    required
-                    error={formErrors.email}
-                    autoComplete="street-address"
-                    width={72}
-                  />
-                </AddressAutofill>
-              </div>
-              <div>
-                <AddressAutofill
-                  accessToken={mapboxgl.accessToken}
-                  options={{
-                    language: "en",
-                    country: "IN",
-                  }}
-                  theme={{
-                    variables: {
-                      fontFamily: "sans-serif",
-                      unit: "12px",
-                      padding: "0.5em",
-                      borderRadius: "0.25em",
-                      boxShadow: "1px 2px 2px 1px silver",
-                    },
-                  }}
-                >
-                  <FormInput
-                    label="Drop Location"
-                    name="dropLocation"
-                    type="text"
-                    value={formData.dropLocation}
-                    onChange={handleChange}
-                    required
-                    error={formErrors.password}
-                    autoComplete="street-address"
-                    width={72}
-                  />
-                </AddressAutofill>
-              </div>
-
-              <div className="flex items-center justify-center">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                  onClick={() => {
-                    // const errors = validateForm(formData, fieldsToValidate);
-                    // setFormErrors(errors);
-                  }}
-                >
-                  Create Ride
-                </button>
-              </div>
-            </form>
+            <h1 className="pl-10">
+              Waiting for driver to accept your request
+            </h1>
           </div>
-          {isCreateRide && (
-            // formData.pickupLocation &&
-            // formData.dropLocation &&
+          ) : (
             <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
-              {/* <div className=" mb-2">
-                  <h2 className="text-xl font-semibold">{"Confirm a Ride"}</h2>
-                </div> */}
+              <div className=" mb-6">
+                <h2 className="text-xl font-semibold">{"Get a Ride"}</h2>
+              </div>
+
+              <form onSubmit={handleSubmit} className="w-full  max-w-sm">
+                <div className="flex flex-row ">
+                  {/* <TbCircleDotFilled size={30}/>  */}
+                  <AddressAutofill
+                    accessToken={mapboxgl.accessToken}
+                    options={{
+                      language: "en",
+                      country: "IN",
+                    }}
+                    theme={{
+                      variables: {
+                        fontFamily: "sans-serif",
+                        unit: "12px",
+                        padding: "0.5em",
+                        borderRadius: "0.25em",
+                        boxShadow: "1px 2px 2px 1px silver",
+                      },
+                    }}
+                  >
+                    <FormInput
+                      label="Pickup Location"
+                      name="pickupLocation"
+                      type="text"
+                      value={formData.pickupLocation}
+                      onChange={handleChange}
+                      required
+                      error={formErrors.email}
+                      autoComplete="street-address"
+                      width={72}
+                    />
+                  </AddressAutofill>
+                </div>
+                <div>
+                  <AddressAutofill
+                    accessToken={mapboxgl.accessToken}
+                    options={{
+                      language: "en",
+                      country: "IN",
+                    }}
+                    theme={{
+                      variables: {
+                        fontFamily: "sans-serif",
+                        unit: "12px",
+                        padding: "0.5em",
+                        borderRadius: "0.25em",
+                        boxShadow: "1px 2px 2px 1px silver",
+                      },
+                    }}
+                  >
+                    <FormInput
+                      label="Drop Location"
+                      name="dropLocation"
+                      type="text"
+                      value={formData.dropLocation}
+                      onChange={handleChange}
+                      required
+                      error={formErrors.password}
+                      autoComplete="street-address"
+                      width={72}
+                    />
+                  </AddressAutofill>
+                </div>
+
+                <div className="flex items-center justify-center">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                    onClick={() => {
+                      // const errors = validateForm(formData, fieldsToValidate);
+                      // setFormErrors(errors);
+                    }}
+                  >
+                    Create Ride
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+          {isCreateRide && (
+            <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
+              <div className=" mb-2">
+                <h2 className="text-xl font-semibold">{"Request a Ride"}</h2>
+              </div>
               <div className="flex flex-col space-y-2 text-sm">
                 <div className="shadow-md p-2">
                   Pickup: {formData.pickupLocation}
@@ -216,7 +240,7 @@ const HomePage = () => {
                 <div className="shadow-md p-2">
                   Duration: {durationToMinutes(childDuration!)}
                 </div>
-                <form action="">
+                <form action="" onSubmit={handleConfirmSubmit}>
                   <label
                     htmlFor="visitors"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -225,25 +249,27 @@ const HomePage = () => {
                   </label>
                   <input
                     type="number"
-                    id="visitors"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder=""
+                    placeholder="Enter Amount to be Pay"
+                    value={formData.amount}
+                    onChange={handleChange}
+                    name="amount"
                     required
-                    disabled
+                    // isConfirmRide disabled
                   ></input>
+                  <div className="flex items-center justify-center pt-4">
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      type="submit"
+                      onClick={() => {
+                        // const errors = validateForm(formData, fieldsToValidate);
+                        // setFormErrors(errors);
+                      }}
+                    >
+                      Confirm Ride
+                    </button>
+                  </div>
                 </form>
-                <div className="flex items-center justify-center pt-4">
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit"
-                    onClick={() => {
-                      // const errors = validateForm(formData, fieldsToValidate);
-                      // setFormErrors(errors);
-                    }}
-                  >
-                    Confirm Ride
-                  </button>
-                </div>
               </div>
             </div>
           )}

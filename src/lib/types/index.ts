@@ -49,6 +49,7 @@ export interface coordinates {
 export interface RiderHomePageProps {
   pickupLocation: string;
   dropLocation: string;
+  amount: number;
 }
 
 export interface DriverHomePageProps {}
