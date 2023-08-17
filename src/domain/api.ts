@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ;
+const BASE_URL:any = process.env.NEXT_PUBLIC_API_URL ;
 
 export function LoadEnv()
 {
@@ -50,15 +50,20 @@ export async function getData(endpoint?: any, params?: any, id?: string | string
 }
 
 
-export async function putData(url?: string, payload?: any, id?: number) {
+export async function putData(url?: string, payload?: any, id?: string | number, afterUrl?:string) {
   try {
     console.log(id);
-    const response = await fetch(url + `/${id}`, {
+    if (id != undefined) url = `/${url}` + `/${id}`
+    if (afterUrl != undefined) url = url + `/${afterUrl}`
+
+    const URL = BASE_URL+ url
+    const response = await fetch(URL, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
         // Authorization: "Bearer " + auth,
       },
+      credentials: "include",
       body: JSON.stringify(payload),
     });
 
