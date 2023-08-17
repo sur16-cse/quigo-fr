@@ -55,10 +55,22 @@ export interface RiderHomePageProps {
 export interface DriverHomePageProps {}
 
 export interface RiderMapBoxProps {
-  pickupCoordinates: coordinates ;
+  pickupCoordinates: coordinates;
   dropoffCoordinates: coordinates;
   zoom: number;
-  distance: number | null ;
-  duration: number | null ;
+  distance: number | null;
+  duration: number | null;
   location: coordinates;
+}
+
+export interface AccedptedRideDetails {
+  driver_name: string;
+  driver_number: string;
+  origin: string;
+  destination: string;
+  duration: string;
+  distance: string;
+  price: string;
+  ride_status: string;
+  payment_status: string;
 }

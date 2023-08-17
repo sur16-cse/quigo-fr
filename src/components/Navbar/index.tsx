@@ -30,10 +30,10 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="flex space-x-10 flex-row items-center mr-8">
-            <Link href="/search" className="flex space-x-2 items-center">
+            {/* <Link href="/search" className="flex space-x-2 items-center">
               <BsSearch />
               <span>Search</span>
-            </Link>
+            </Link> */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="flex space-x-2 items-center"

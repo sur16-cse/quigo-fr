@@ -6,14 +6,33 @@ import mapboxgl from "mapbox-gl";
 import { loadComponents } from "next/dist/server/load-components";
 import Map from "@/components/Map";
 import { TbCircleDotFilled } from "react-icons/tb";
-import { RiderHomePageProps, coordinates } from "@/lib/types";
+import {
+  AccedptedRideDetails,
+  RiderHomePageProps,
+  coordinates,
+} from "@/lib/types";
 import dynamic from "next/dynamic";
 import { RiderMapBoxProps } from "@/lib/types";
 import { distanceToKm, durationToMinutes } from "@/utils/conversion";
+import toast from "react-hot-toast";
+import { getData, postData } from "@/domain/api";
+import { get } from "http";
 
 const defaultCoordinates: coordinates = {
   lat: 0,
   lng: 0,
+};
+
+const defaultAcceptedRideDetails: AccedptedRideDetails = {
+  driver_name: "",
+  driver_number: "",
+  origin: "",
+  destination: "",
+  duration: "",
+  distance: "",
+  price: "",
+  ride_status: "",
+  payment_status: "",
 };
 
 const AddressAutofill: any = dynamic(
@@ -46,6 +65,29 @@ const HomePage = () => {
     useState<RiderMapBoxProps["distance"]>(null);
   const [childDuration, setChildDuration] =
     useState<RiderMapBoxProps["duration"]>(null);
+  const [isStatus, setIsStatus] = useState(null);
+  const [riderId, setRiderId] = useState(null);
+  const [rideDetails, setRideDetails] = useState({
+    ...defaultAcceptedRideDetails,
+  });
+
+  useEffect(() => {
+    console.log(riderId);
+    const id = window.localStorage.getItem("riderId");
+    if (id !== null || id !== undefined) {
+      let interval = setInterval(async () => {
+        const res = await getData("/rider/rides/", {}, id!);
+        console.log(res);
+        if (res.status !== "requested") {
+          setIsStatus(res.status);
+          setRideDetails(res.ride_details);
+        }
+      }, 15000);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [riderId]);
 
   const getCordinates = async (location: string) => {
     try {
@@ -84,14 +126,39 @@ const HomePage = () => {
     }
   };
 
-  const handleConfirmSubmit = (event: React.FormEvent) => {
+  const handleConfirmSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log("handleConfirmSubmit");
-    if (isCreateRide && formData.amount!=0) {
+    if (isCreateRide && formData.amount != 0) {
       setIsConfirmRide(true);
+      const riderRequestData = {
+        origin: formData.pickupLocation,
+        destination: formData.dropLocation,
+        from_lng: pickupCoordinates.lng.toString,
+        from_lat: pickupCoordinates.lat.toString,
+        to_lng: dropoffCoordinates.lng.toString,
+        to_lat: dropoffCoordinates.lat.toString,
+        duration: childDuration?.toString(),
+        distance: childDistance?.toString(),
+        amount: formData.amount.toString(),
+      };
+      let data = await postData(riderRequestData, "/rider/ride");
+      console.log(data);
+      if (data.status === "success") {
+        setRiderId(data.ride_details.ID);
+        window.localStorage.setItem("riderId", data.ride_details.ID);
+        console.log(data.ride_details.RideStatus);
+        setIsStatus(data.ride_details.RideStatus);
+        toast.success(data.message);
+        // router.push("/auth/verifyemail");
+      } else if (data.status === "fail") {
+        toast.error(data.message);
+      } else if (data.status === "error") {
+        toast.error(data.message);
+      }
     }
     // setFormData({ ...defaultFormData })
-  }
+  };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -101,8 +168,8 @@ const HomePage = () => {
       formData.pickupLocation,
       formData.dropLocation
     );
-    console.log(childDistance, childDuration)
-     setIsCreateRide(true); 
+    console.log(childDistance, childDuration);
+    setIsCreateRide(true);
     // setFormData({ ...defaultFormData })
   };
 
@@ -121,23 +188,65 @@ const HomePage = () => {
     setFormErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
-  console.log(isCreateRide)
+  console.log(isCreateRide);
 
   return (
     <>
       <div className="flex flex-row w-full bg-black h-[90vh] ">
         <div className="flex  flex-col w-[32vw] bg-white pl-8 space-y-3">
           {isConfirmRide ? (
-            <div className="my-3 flex flex-col justify-center">
-            <div className="relative mx-auto mt-6 animate-[propel_5s_infinite]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="cornflowerblue" className="h-16 w-16">
-                <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
-              </svg>
-            </div>
-            <h1 className="pl-10">
-              Waiting for driver to accept your request
-            </h1>
-          </div>
+            isStatus === "requested" ? (
+              <div className="my-3 flex flex-col justify-center">
+                <div className="relative mx-auto mt-6 animate-[propel_5s_infinite]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="cornflowerblue"
+                    className="h-16 w-16"
+                  >
+                    <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+                  </svg>
+                </div>
+                <h1 className="pl-10">
+                  Waiting for driver to accept your request
+                </h1>
+              </div>
+            ) : (
+              <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
+                {/* <div className=" mb-2">
+                <h2 className="text-xl font-semibold">{"Request a Ride"}</h2>
+              </div> */}
+                <div className="flex flex-col space-y-2 text-sm">
+                  <div className="shadow-md p-2">
+                    driver name: {rideDetails.driver_name}
+                  </div>
+                  <div className="shadow-md p-2">
+                    phone number: {rideDetails.driver_number}
+                  </div>
+                  <div className="shadow-md p-2">
+                    origin: {rideDetails.origin}
+                  </div>
+                  <div className="shadow-md p-2">
+                    destination: {rideDetails.destination}
+                  </div>
+                  <div className="shadow-md p-2">
+                    distance: {rideDetails.distance}
+                  </div>
+                  <div className="shadow-md p-2">
+                    duration: {rideDetails.duration}
+                  </div>
+                  <div className="shadow-md p-2">
+                    price: {rideDetails.price}
+                  </div>
+                  <div className="shadow-md p-2">
+                    ride status: {rideDetails.ride_status}
+                  </div>
+                  <div className="shadow-md p-2">
+                    payment status: {rideDetails.payment_status}
+                  </div>
+                </div>
+              </div>
+            )
           ) : (
             <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
               <div className=" mb-6">

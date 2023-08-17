@@ -8,6 +8,7 @@ import React, {
 import mapboxgl from "mapbox-gl";
 import { TbCircleDotFilled } from "react-icons/tb";
 import { RiderMapBoxProps, coordinates } from "@/lib/types";
+import { toast } from "react-hot-toast";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 const defaultCoordinates: coordinates = {
@@ -47,7 +48,6 @@ const Map = ({
   }, []);
 
   useEffect(() => {
-    //want to clear everything on the map before adding new stuff
     if (mapRef.current) {
       mapRef.current.remove();
       mapRef.current = null;
@@ -132,6 +132,15 @@ const Map = ({
     )
       .then((response) => response.json())
       .then((response) => {
+        // throw error
+        if (response.code === "InvalidInput") {
+          toast.error(response.message);
+          return;
+        }
+        else if(response.code === "NoRoute"){
+          toast.error(response.message);
+          return;
+        }
         console.log(response);
         const data = response.routes[0];
         const distance = data.distance;
@@ -166,7 +175,8 @@ const Map = ({
             "line-width": 8,
           },
         });
-      });
+      })
+     
   };
 
   return (
