@@ -130,7 +130,7 @@ const HomePage = () => {
     event.preventDefault();
     console.log("handleConfirmSubmit");
     if (isCreateRide && formData.amount != 0) {
-      setIsConfirmRide(true);
+      
       const riderRequestData = {
         origin: formData.pickupLocation,
         destination: formData.dropLocation,
@@ -143,6 +143,7 @@ const HomePage = () => {
         amount: formData.amount.toString(),
       };
       let data = await postData(riderRequestData, "/rider/ride");
+      setIsConfirmRide(true);
       console.log(data);
       if (data.status === "success") {
         setRiderId(data.ride_details.ID);
@@ -216,7 +217,7 @@ const HomePage = () => {
                 {/* <div className=" mb-2">
                 <h2 className="text-xl font-semibold">{"Request a Ride"}</h2>
               </div> */}
-                <div className="flex flex-col space-y-2 text-sm">
+                {/* <div className="flex flex-col space-y-2 text-sm">
                   <div className="shadow-md p-2">
                     driver name: {rideDetails.driver_name}
                   </div>
@@ -244,7 +245,7 @@ const HomePage = () => {
                   <div className="shadow-md p-2">
                     payment status: {rideDetails.payment_status}
                   </div>
-                </div>
+                </div> */}
               </div>
             )
           ) : (
