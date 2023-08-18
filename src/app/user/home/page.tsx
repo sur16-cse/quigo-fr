@@ -72,22 +72,29 @@ const HomePage = () => {
   });
 
   useEffect(() => {
-    console.log(riderId);
     const id = window.localStorage.getItem("riderId");
-    if (id !== null || id !== undefined) {
-      let interval = setInterval(async () => {
-        const res = await getData("/rider/rides/", {}, id!);
+    console.log(id);
+
+    const fetchData = async () => {
+      if (id !== null) {
+        const res = await getData("/rider/rides/", {}, id);
         console.log(res);
-        if (res.status !== "requested") {
-          setIsStatus(res.status);
+        setIsConfirmRide(true);
+        setIsStatus(res.rideStatus);
+        if (res.rideStatus !== "requested") {
           setRideDetails(res.ride_details);
         }
-      }, 15000);
-      return () => {
-        clearInterval(interval);
-      };
-    }
-  }, [riderId]);
+      }
+    };
+
+    fetchData(); // Load data immediately
+
+    const interval = setInterval(fetchData, 15000); // Fetch data every 15 seconds
+
+    return () => {
+      clearInterval(interval); // Clear interval on component unmount
+    };
+  }, []); // Empty dependency array, so this effect only runs on mount and unmount
 
   const getCordinates = async (location: string) => {
     try {
@@ -130,7 +137,6 @@ const HomePage = () => {
     event.preventDefault();
     console.log("handleConfirmSubmit");
     if (isCreateRide && formData.amount != 0) {
-      
       const riderRequestData = {
         origin: formData.pickupLocation,
         destination: formData.dropLocation,
@@ -143,9 +149,9 @@ const HomePage = () => {
         amount: formData.amount.toString(),
       };
       let data = await postData(riderRequestData, "/rider/ride");
-      setIsConfirmRide(true);
       console.log(data);
       if (data.status === "success") {
+        setIsConfirmRide(true);
         setRiderId(data.ride_details.ID);
         window.localStorage.setItem("riderId", data.ride_details.ID);
         console.log(data.ride_details.RideStatus);
@@ -190,6 +196,7 @@ const HomePage = () => {
   };
 
   console.log(isCreateRide);
+  console.log(isStatus);
 
   return (
     <>
@@ -214,38 +221,39 @@ const HomePage = () => {
               </div>
             ) : (
               <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
-                {/* <div className=" mb-2">
-                <h2 className="text-xl font-semibold">{"Request a Ride"}</h2>
-              </div> */}
-                {/* <div className="flex flex-col space-y-2 text-sm">
+                <div className=" mb-2">
+                  <h2 className="text-xl font-semibold">{"Ride Details"}</h2>
+                </div>
+                <div className="flex flex-col space-y-2 text-sm">
                   <div className="shadow-md p-2">
-                    driver name: {rideDetails.driver_name}
+                    <b>Driver Name</b>: {rideDetails.driver_name}
                   </div>
                   <div className="shadow-md p-2">
-                    phone number: {rideDetails.driver_number}
+                    <b>Phone Number</b>: {rideDetails.driver_number}
                   </div>
                   <div className="shadow-md p-2">
-                    origin: {rideDetails.origin}
+                    <b>Origin</b>: {rideDetails.origin}
                   </div>
                   <div className="shadow-md p-2">
-                    destination: {rideDetails.destination}
+                    <b>Destination</b>: {rideDetails.destination}
                   </div>
                   <div className="shadow-md p-2">
-                    distance: {rideDetails.distance}
+                    <b>Distance</b>: {rideDetails.distance}
                   </div>
                   <div className="shadow-md p-2">
-                    duration: {rideDetails.duration}
+                    <b>Duration</b>: {rideDetails.duration}
                   </div>
                   <div className="shadow-md p-2">
-                    price: {rideDetails.price}
+                    <b>Amount to pay</b>: {rideDetails.price}
                   </div>
                   <div className="shadow-md p-2">
-                    ride status: {rideDetails.ride_status}
+                    <b>Ride status</b>:{" "}
+                    <b className="text-green-600">{rideDetails.ride_status}</b>
                   </div>
                   <div className="shadow-md p-2">
-                    payment status: {rideDetails.payment_status}
+                    <b>Payment status</b>: {rideDetails.payment_status}
                   </div>
-                </div> */}
+                </div>
               </div>
             )
           ) : (
@@ -332,7 +340,7 @@ const HomePage = () => {
               </form>
             </div>
           )}
-          {isCreateRide && (
+          {isCreateRide && isStatus === "requested" && (
             <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
               <div className=" mb-2">
                 <h2 className="text-xl font-semibold">{"Request a Ride"}</h2>
