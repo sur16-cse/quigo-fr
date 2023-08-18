@@ -74,7 +74,9 @@ const HomePage = () => {
   useEffect(() => {
     const id = window.localStorage.getItem("riderId");
     console.log(id);
-
+  
+    let hasFetchedCoordinates = false; // Flag to track whether coordinates have been fetched
+  
     const fetchData = async () => {
       if (id !== null) {
         const res = await getData("/rider/rides/", {}, id);
@@ -83,18 +85,28 @@ const HomePage = () => {
         setIsStatus(res.rideStatus);
         if (res.rideStatus !== "requested") {
           setRideDetails(res.ride_details);
+  
+          // Call getTravelLocationCoordinates only if not fetched already
+          if (!hasFetchedCoordinates) {
+            getTravelLocationCoordinates(
+              res.ride_details.origin,
+              res.ride_details.destination
+            );
+            hasFetchedCoordinates = true; // Set the flag to true after fetching
+          }
         }
       }
     };
-
+  
     fetchData(); // Load data immediately
-
+  
     const interval = setInterval(fetchData, 15000); // Fetch data every 15 seconds
-
+  
     return () => {
       clearInterval(interval); // Clear interval on component unmount
     };
-  }, []); // Empty dependency array, so this effect only runs on mount and unmount
+  }, []);
+  
 
   const getCordinates = async (location: string) => {
     try {
