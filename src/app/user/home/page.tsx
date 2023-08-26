@@ -352,7 +352,7 @@ const HomePage = () => {
               </form>
             </div>
           )}
-          {isCreateRide && isStatus === "requested" && (
+          {isCreateRide && (isStatus === "requested" || isStatus===null) && (
             <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
               <div className=" mb-2">
                 <h2 className="text-xl font-semibold">{"Request a Ride"}</h2>
