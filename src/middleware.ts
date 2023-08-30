@@ -1,8 +1,9 @@
+import { useRef } from 'react';
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
+  const path = request.url
   console.log(path + "path");
   const isPublicPath =
     path === "/auth/login" ||
@@ -34,7 +35,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/auth/signup", request.nextUrl));
   }
 
-  return NextResponse.rewrite(request.nextUrl);
+  return Response.redirect(path);
 }
 
 export const config = {
