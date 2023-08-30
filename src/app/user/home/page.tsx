@@ -103,6 +103,7 @@ const HomePage = () => {
         }
         if (res.rideStatus === "rejected") {
           toast(res.message);
+          clearInterval(interval);
         }
       }
     };
@@ -293,7 +294,10 @@ console.log(isConfirmRide)
                         localStorage.removeItem("riderId");
                         setIsConfirmRide(false);
                         setIsCreateRide(false);
+                        setIsStatus(null);
                         setFormData({ ...defaultFormData });
+                        setPickupCoordinates({ ...defaultCoordinates });
+                        setDropoffCoordinates({ ...defaultCoordinates });
                       }}
                     >
                       create ride again
@@ -386,6 +390,7 @@ console.log(isConfirmRide)
               </form>
             </div>
           )}
+          
           {isCreateRide && (isStatus === "requested" || isStatus === null) && (
             <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
               <div className=" mb-2">
