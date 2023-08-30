@@ -83,7 +83,7 @@ const HomePage = () => {
         console.log(res);
         setIsConfirmRide(true);
         setIsStatus(res.rideStatus);
-        if (res.rideStatus !== "requested") {
+        if (res.rideStatus !== "requested" && res.rideStatus !== null && res.rideStatus !== "rejected")  {
           setRideDetails(res.ride_details);
   
           // Call getTravelLocationCoordinates only if not fetched already
@@ -94,6 +94,12 @@ const HomePage = () => {
             );
             hasFetchedCoordinates = true; // Set the flag to true after fetching
           }
+        }
+        if (res.rideStatus === "rejected") {
+          setIsConfirmRide(false);
+          
+          localStorage.removeItem("riderId");
+          toast(res.message);
         }
       }
     };
@@ -214,7 +220,7 @@ const HomePage = () => {
     <>
       <div className="flex flex-row w-full bg-black h-[90vh] ">
         <div className="flex  flex-col w-[32vw] bg-white pl-8 space-y-3">
-          {isConfirmRide ? (
+          {isConfirmRide && isStatus!=="rejected"? (
             isStatus === "requested" ? (
               <div className="my-3 flex flex-col justify-center">
                 <div className="relative mx-auto mt-6 animate-[propel_5s_infinite]">
@@ -385,9 +391,9 @@ const HomePage = () => {
                     onChange={handleChange}
                     name="amount"
                     required
-                    // isConfirmRide disabled
+                    disabled={isConfirmRide}
                   ></input>
-                  <div className="flex items-center justify-center pt-4">
+                  {isConfirmRide?null:<div className="flex items-center justify-center pt-4">
                     <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                       type="submit"
@@ -398,7 +404,7 @@ const HomePage = () => {
                     >
                       Confirm Ride
                     </button>
-                  </div>
+                  </div>}
                 </form>
               </div>
             </div>
