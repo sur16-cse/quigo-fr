@@ -163,6 +163,7 @@ console.log(isConfirmRide)
   const handleConfirmSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log("handleConfirmSubmit");
+    console.log(isCreateRide)
     if (isCreateRide && formData.amount != 0) {
       const riderRequestData = {
         origin: formData.pickupLocation,
@@ -224,6 +225,7 @@ console.log(isConfirmRide)
 
   console.log(isCreateRide);
   console.log(isStatus);
+  console.log(isConfirmRide)
 
   return (
     <>

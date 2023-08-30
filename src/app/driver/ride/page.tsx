@@ -20,7 +20,7 @@ const DriverRidePage = () => {
 
     const startRide = async () => {
         try {
-            await putData(`/driver/rides/${ride?.ID}`, {}, 'start' );
+            await putData(`driver/rides/${ride.id}`, {}, 'start' );
             fetchRide(); // Refresh the ride details
         } catch (error) {
             console.error("Error starting ride:", error);
@@ -29,10 +29,19 @@ const DriverRidePage = () => {
 
     const cancelRide = async () => {
         try {
-            await putData(`/driver/rides/${ride?.ID}`, {}, 'cancel' );
+            await putData(`driver/rides/${ride.id}`, {}, 'cancel' );
             fetchRide(); // Refresh the ride details
         } catch (error) {
             console.error("Error cancelling ride:", error);
+        }
+    }
+
+    const completeRide = async () => {
+        try {
+            await putData(`driver/rides/${ride.id}`, {}, 'complete' );
+            fetchRide(); // Refresh the ride details
+        } catch (error) {
+            console.error("Error completing ride:", error);
         }
     }
 
@@ -62,6 +71,7 @@ const DriverRidePage = () => {
                     <p>Duration: {ride.duration} min</p>
                     <p>Distance: {ride.distance} KM</p>
                     <p>Fare: Rs {ride.price}</p>
+                    <p>Payment : {ride.payment_status}</p>
                 </div>
                 <div className='mt-4'>
                     {ride.ride_status === 'accepted' && (
@@ -80,6 +90,16 @@ const DriverRidePage = () => {
                             </button>
                         </>
                     )}
+                    {
+                        ride.ride_status === 'started' && (
+                            <button
+                                className='bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition duration-300 ease-in-out'
+                                onClick={completeRide}
+                            >
+                                Complete
+                            </button>
+                        )
+                    }
                 </div>
             </div>:<div className='bg-white shadow-md rounded-lg p-6 border border-gray-300'>
                 <h1 className='text-3xl font-bold mb-4'>No Ride</h1>
