@@ -115,7 +115,7 @@ const HomePage = () => {
     return () => {
       clearInterval(interval); // Clear interval on component unmount
     };
-  }, []);
+  }, [isConfirmRide,isCreateRide]);
 
 
 console.log(isCreateRide)
@@ -298,6 +298,9 @@ console.log(isConfirmRide)
                         setFormData({ ...defaultFormData });
                         setPickupCoordinates({ ...defaultCoordinates });
                         setDropoffCoordinates({ ...defaultCoordinates });
+                        setChildDistance(null);
+                        setChildDuration(null);
+                        setRideDetails({ ...defaultAcceptedRideDetails });
                       }}
                     >
                       create ride again
