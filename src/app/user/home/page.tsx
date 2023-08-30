@@ -16,7 +16,6 @@ import { RiderMapBoxProps } from "@/lib/types";
 import { distanceToKm, durationToMinutes } from "@/utils/conversion";
 import toast from "react-hot-toast";
 import { getData, postData } from "@/domain/api";
-import { get } from "http";
 
 const defaultCoordinates: coordinates = {
   lat: 0,
@@ -74,18 +73,25 @@ const HomePage = () => {
   useEffect(() => {
     const id = window.localStorage.getItem("riderId");
     console.log(id);
-  
+
     let hasFetchedCoordinates = false; // Flag to track whether coordinates have been fetched
-  
+
     const fetchData = async () => {
       if (id !== null) {
         const res = await getData("/rider/rides/", {}, id);
         console.log(res);
-        setIsConfirmRide(true);
+        if (res.rideStatus !== "requested" && res.rideStatus !== null) {
+          console.log("accepted");
+          setIsConfirmRide(true);
+        } else if (res.rideStatus === "requested") {
+          console.log("requested");
+          setIsCreateRide(true);
+          setIsConfirmRide(true);
+        }
         setIsStatus(res.rideStatus);
-        if (res.rideStatus !== "requested" && res.rideStatus !== null && res.rideStatus !== "rejected")  {
+        if (res.rideStatus !== null) {
           setRideDetails(res.ride_details);
-  
+
           // Call getTravelLocationCoordinates only if not fetched already
           if (!hasFetchedCoordinates) {
             getTravelLocationCoordinates(
@@ -96,23 +102,25 @@ const HomePage = () => {
           }
         }
         if (res.rideStatus === "rejected") {
-          setIsConfirmRide(false);
-          
-          localStorage.removeItem("riderId");
           toast(res.message);
         }
       }
     };
-  
+
     fetchData(); // Load data immediately
-  
+
     const interval = setInterval(fetchData, 15000); // Fetch data every 15 seconds
-  
+
     return () => {
       clearInterval(interval); // Clear interval on component unmount
     };
   }, []);
-  
+
+
+console.log(isCreateRide)
+console.log(isStatus)
+console.log(isConfirmRide)
+  console.log(rideDetails);
 
   const getCordinates = async (location: string) => {
     try {
@@ -220,7 +228,7 @@ const HomePage = () => {
     <>
       <div className="flex flex-row w-full bg-black h-[90vh] ">
         <div className="flex  flex-col w-[32vw] bg-white pl-8 space-y-3">
-          {isConfirmRide && isStatus!=="rejected"? (
+          {isConfirmRide ? (
             isStatus === "requested" ? (
               <div className="my-3 flex flex-col justify-center">
                 <div className="relative mx-auto mt-6 animate-[propel_5s_infinite]">
@@ -238,40 +246,60 @@ const HomePage = () => {
                 </h1>
               </div>
             ) : (
-              <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
-                <div className=" mb-2">
-                  <h2 className="text-xl font-semibold">{"Ride Details"}</h2>
+              <div className="my-3 flex flex-col justify-center">
+                <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
+                  <div className=" mb-2">
+                    <h2 className="text-xl font-semibold">{"Ride Details"}</h2>
+                  </div>
+                  <div className="flex flex-col space-y-2 text-sm">
+                    <div className="shadow-md p-2">
+                      <b>Driver Name</b>: {rideDetails.driver_name}
+                    </div>
+                    <div className="shadow-md p-2">
+                      <b>Phone Number</b>: {rideDetails.driver_number}
+                    </div>
+                    <div className="shadow-md p-2">
+                      <b>Origin</b>: {rideDetails.origin}
+                    </div>
+                    <div className="shadow-md p-2">
+                      <b>Destination</b>: {rideDetails.destination}
+                    </div>
+                    <div className="shadow-md p-2">
+                      <b>Distance</b>: {rideDetails.distance}
+                    </div>
+                    <div className="shadow-md p-2">
+                      <b>Duration</b>: {rideDetails.duration}
+                    </div>
+                    <div className="shadow-md p-2">
+                      <b>Amount to pay</b>: {rideDetails.price}
+                    </div>
+                    <div className="shadow-md p-2">
+                      <b>Ride status</b>:{" "}
+                      <b className="text-green-600">
+                        {rideDetails.ride_status}
+                      </b>
+                    </div>
+                    <div className="shadow-md p-2">
+                      <b>Payment status</b>: {rideDetails.payment_status}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col space-y-2 text-sm">
-                  <div className="shadow-md p-2">
-                    <b>Driver Name</b>: {rideDetails.driver_name}
+                {rideDetails.ride_status === "rejected" && (
+                  <div className="flex items-center justify-center pt-4">
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      type="submit"
+                      onClick={() => {
+                        localStorage.removeItem("riderId");
+                        setIsConfirmRide(false);
+                        setIsCreateRide(false);
+                        setFormData({ ...defaultFormData });
+                      }}
+                    >
+                      create ride again
+                    </button>
                   </div>
-                  <div className="shadow-md p-2">
-                    <b>Phone Number</b>: {rideDetails.driver_number}
-                  </div>
-                  <div className="shadow-md p-2">
-                    <b>Origin</b>: {rideDetails.origin}
-                  </div>
-                  <div className="shadow-md p-2">
-                    <b>Destination</b>: {rideDetails.destination}
-                  </div>
-                  <div className="shadow-md p-2">
-                    <b>Distance</b>: {rideDetails.distance}
-                  </div>
-                  <div className="shadow-md p-2">
-                    <b>Duration</b>: {rideDetails.duration}
-                  </div>
-                  <div className="shadow-md p-2">
-                    <b>Amount to pay</b>: {rideDetails.price}
-                  </div>
-                  <div className="shadow-md p-2">
-                    <b>Ride status</b>:{" "}
-                    <b className="text-green-600">{rideDetails.ride_status}</b>
-                  </div>
-                  <div className="shadow-md p-2">
-                    <b>Payment status</b>: {rideDetails.payment_status}
-                  </div>
-                </div>
+                )}
               </div>
             )
           ) : (
@@ -358,23 +386,27 @@ const HomePage = () => {
               </form>
             </div>
           )}
-          {isCreateRide && (isStatus === "requested" || isStatus===null) && (
+          {isCreateRide && (isStatus === "requested" || isStatus === null) && (
             <div className="shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] border-gray-300 border-2  pl-10 pr-10 pb-6 pt-6 rounded-lg bg-white w-[25vw]">
               <div className=" mb-2">
                 <h2 className="text-xl font-semibold">{"Request a Ride"}</h2>
               </div>
               <div className="flex flex-col space-y-2 text-sm">
                 <div className="shadow-md p-2">
-                  Pickup: {formData.pickupLocation}
+                  Pickup: {formData.pickupLocation!==""?formData.pickupLocation: rideDetails.origin}
                 </div>
                 <div className="shadow-md p-2">
-                  Dropoff: {formData.dropLocation}
+                  Dropoff: {formData.dropLocation!==""? formData.dropLocation: rideDetails.destination}
                 </div>
                 <div className="shadow-md p-2">
-                  Distance: {distanceToKm(childDistance!)}
+                  Distance:{" "}
+                  {distanceToKm(childDistance!) ||
+                    distanceToKm(parseFloat(rideDetails.distance))}
                 </div>
                 <div className="shadow-md p-2">
-                  Duration: {durationToMinutes(childDuration!)}
+                  Duration:{" "}
+                  {durationToMinutes(childDuration!) ||
+                    durationToMinutes(parseFloat(rideDetails.duration))}
                 </div>
                 <form action="" onSubmit={handleConfirmSubmit}>
                   <label
@@ -387,24 +419,26 @@ const HomePage = () => {
                     type="number"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Enter Amount to be Pay"
-                    value={formData.amount}
+                    value={formData.amount!==0?formData.amount: rideDetails.price}
                     onChange={handleChange}
                     name="amount"
                     required
                     disabled={isConfirmRide}
                   ></input>
-                  {isConfirmRide?null:<div className="flex items-center justify-center pt-4">
-                    <button
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                      type="submit"
-                      onClick={() => {
-                        // const errors = validateForm(formData, fieldsToValidate);
-                        // setFormErrors(errors);
-                      }}
-                    >
-                      Confirm Ride
-                    </button>
-                  </div>}
+                  {isConfirmRide ? null : (
+                    <div className="flex items-center justify-center pt-4">
+                      <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit"
+                        onClick={() => {
+                          // const errors = validateForm(formData, fieldsToValidate);
+                          // setFormErrors(errors);
+                        }}
+                      >
+                        Confirm Ride
+                      </button>
+                    </div>
+                  )}
                 </form>
               </div>
             </div>
