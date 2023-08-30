@@ -33,6 +33,8 @@ export function middleware(request: NextRequest) {
   if (path.startsWith("/auth/verifysuccess/") && !email) {
     return NextResponse.redirect(new URL("/auth/signup", request.nextUrl));
   }
+
+  return NextResponse.rewrite(request.nextUrl);
 }
 
 export const config = {
