@@ -4,7 +4,7 @@ import { RiTimeLine } from "react-icons/ri";
 import { GrMap } from "react-icons/gr";
 import { LiaMoneyCheckAltSolid } from "react-icons/lia";
 import { BsFillSquareFill } from "react-icons/bs";
-import Footer from "../Footer";
+import Footer from "@/components/footer";
 
 const Hero = () => {
   return (

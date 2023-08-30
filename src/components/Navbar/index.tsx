@@ -8,7 +8,7 @@ import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
-import ProfileDropdown from "../ProfileDropdown";
+import ProfileDropdown from "@/components/ProfileDropdown";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
